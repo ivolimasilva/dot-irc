@@ -43,15 +43,11 @@ namespace Server
             try
             {
                 users.Add(_user);
-<<<<<<< HEAD
                 Console.WriteLine("Success!");
 
                 // Save updated users' list to file
                 Files.Save(Files.filename, users);
 
-=======
-                Console.WriteLine("Success!\n");                
->>>>>>> e14580aefe01835ed7aa943aaf5c3bffcaa34a6c
                 return true;
             }
             catch
