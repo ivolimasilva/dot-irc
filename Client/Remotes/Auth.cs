@@ -20,7 +20,7 @@ namespace Client.Remotes
         }
 
         public bool register(string _username, string _name, string _password)
-        {
+        {            
             return remoteAuth.register(_username, _name, _password);
         }
     }
