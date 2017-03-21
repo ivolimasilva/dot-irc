@@ -21,6 +21,7 @@ namespace Client.Remotes
 
         public bool register(string _username, string _name, string _password)
         {
+            // cenas a apagar
             return remoteAuth.register(_username, _name, _password);
         }
     }
