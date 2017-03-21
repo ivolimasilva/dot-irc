@@ -20,5 +20,15 @@ namespace Client
             else
                 lblStatus.Text = "Registration failed.";
         }
+
+        private void btnLogin_Click(object sender, System.EventArgs e)
+        {
+            if(auth.login(txtUsernameLogin.Text, txtPasswordLogin.Text))
+            {
+                // Enter Chatroom
+                lblStatusLogin.Text = "Login succeded, creating ChatRoom";
+            }
+            else lblStatusLogin.Text = "Login failed, try again.";
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Server
             // Checks if the new user already exists in the List (uses Equals to compare)
             if (users.Exists(user => user.Equals(_user)))
             {
-                Console.WriteLine("Already exists!");
+                Console.WriteLine("Username already exists!\n");
                 return false;
             }
 
@@ -27,11 +27,11 @@ namespace Server
             try
             {
                 users.Add(_user);
-                Console.WriteLine("Success!");
+                Console.WriteLine("Success!\n");                
                 return true;
             }
             catch
-            {
+            {   
                 return false;
             }
         }
@@ -42,12 +42,19 @@ namespace Server
             User _user = new User(_username, _password);
 
             // Checks if the user exists in the List (uses Equals to compare)
-            if (users.Exists(user => user.Equals(_user)))
+            if (users.Exists(user => user.Equals(_user) && !user.online))
             {
+                users.Find(user => user.Equals(_user)).online = true;                
+                Console.Write(_user.username);
+                Console.WriteLine(" entered the General ChatRoom!");
+                Console.WriteLine("Success!\n");                
                 return true;
             }
-
-            return false;
+            else
+            {
+                Console.WriteLine("Login failed.\n");
+                return false;
+            }            
         }
     }
 }
