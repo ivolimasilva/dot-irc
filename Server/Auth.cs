@@ -1,12 +1,28 @@
 ﻿using System;
 using Common;
+using Server.Utils;
 using System.Collections.Generic;
+using System.Runtime.Remoting;
 
 namespace Server
 {
     class Auth : MarshalByRefObject, IAuth
     {
         private static List<User> users = new List<User>();
+
+        public override ObjRef CreateObjRef(Type requestedType)
+        {
+            // Load users' list from file
+            users = Files.Load(Files.filename);
+
+            Console.WriteLine("Loaded Users:");
+            users.ForEach(delegate (User user)
+            {
+                Console.WriteLine(user);
+            });
+
+            return base.CreateObjRef(requestedType);
+        }
 
         public bool register(string _username, string _name, string _password)
         {
@@ -27,7 +43,11 @@ namespace Server
             try
             {
                 users.Add(_user);
-                Console.WriteLine("Success!\n");                
+                Console.WriteLine("Success!");
+
+                // Save updated users' list to file
+                Files.Save(Files.filename, users);
+
                 return true;
             }
             catch
