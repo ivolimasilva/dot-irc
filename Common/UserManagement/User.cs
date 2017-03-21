@@ -1,5 +1,8 @@
-﻿namespace Common
+﻿using System;
+
+namespace Common
 {
+    [Serializable]
     public class User
     {
         public string username { get; set; }
@@ -47,6 +50,11 @@
         {
             string _tmp = "Username:\t" + this.username + "\nName:\t\t" + this.name;
             return _tmp;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
