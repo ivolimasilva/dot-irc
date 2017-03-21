@@ -155,7 +155,7 @@
             this.tabLogin.Location = new System.Drawing.Point(4, 28);
             this.tabLogin.Name = "tabLogin";
             this.tabLogin.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLogin.Size = new System.Drawing.Size(576, 408);
+            this.tabLogin.Size = new System.Drawing.Size(341, 229);
             this.tabLogin.TabIndex = 0;
             this.tabLogin.Text = "Login";
             this.tabLogin.UseVisualStyleBackColor = true;
