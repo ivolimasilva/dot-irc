@@ -1,4 +1,5 @@
 ﻿using Client.Remotes;
+using Client.Views;
 using System.Windows.Forms;
 
 namespace Client
@@ -6,6 +7,7 @@ namespace Client
     public partial class Home : Form
     {
         private Auth auth;
+        private ChatRoom chatRoom;
 
         public Home()
         {
@@ -25,8 +27,12 @@ namespace Client
         {
             if(auth.login(txtUsernameLogin.Text, txtPasswordLogin.Text))
             {
-                // Enter Chatroom
-                lblStatusLogin.Text = "Login succeded, creating ChatRoom";
+                //create something to destroy this form
+
+                chatRoom = new ChatRoom();
+                //this.Hide();        
+                chatRoom.Show();
+                //lblStatusLogin.Text = "Login succeded, creating ChatRoom";                  
             }
             else lblStatusLogin.Text = "Login failed, try again.";
         }
