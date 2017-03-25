@@ -11,6 +11,4 @@ namespace Common
         List<Message> getMessages();
         void send(Message _message);
     }
-
-    
 }

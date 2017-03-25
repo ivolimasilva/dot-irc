@@ -2,6 +2,7 @@
 
 namespace Common
 {
+    [Serializable]
     public class Message
     {
         private String source, destination, content;

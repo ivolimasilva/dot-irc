@@ -30,8 +30,8 @@
         {
             this.txtboxChat = new System.Windows.Forms.TextBox();
             this.btnSend = new System.Windows.Forms.Button();
-            this.rtxtboxChat = new System.Windows.Forms.RichTextBox();
             this.listUsers = new System.Windows.Forms.ListBox();
+            this.lvChat = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // txtboxChat
@@ -52,15 +52,6 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // rtxtboxChat
-            // 
-            this.rtxtboxChat.Location = new System.Drawing.Point(85, -1);
-            this.rtxtboxChat.Name = "rtxtboxChat";
-            this.rtxtboxChat.ReadOnly = true;
-            this.rtxtboxChat.Size = new System.Drawing.Size(783, 588);
-            this.rtxtboxChat.TabIndex = 2;
-            this.rtxtboxChat.Text = "";
-            // 
             // listUsers
             // 
             this.listUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -71,13 +62,21 @@
             this.listUsers.Size = new System.Drawing.Size(85, 599);
             this.listUsers.TabIndex = 3;
             // 
+            // lvChat
+            // 
+            this.lvChat.Location = new System.Drawing.Point(85, -1);
+            this.lvChat.Name = "lvChat";
+            this.lvChat.Size = new System.Drawing.Size(783, 588);
+            this.lvChat.TabIndex = 4;
+            this.lvChat.UseCompatibleStateImageBehavior = false;
+            // 
             // ChatRoom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(872, 617);
+            this.Controls.Add(this.lvChat);
             this.Controls.Add(this.listUsers);
-            this.Controls.Add(this.rtxtboxChat);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.txtboxChat);
             this.Name = "ChatRoom";
@@ -92,7 +91,7 @@
 
         private System.Windows.Forms.TextBox txtboxChat;
         private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.RichTextBox rtxtboxChat;
         private System.Windows.Forms.ListBox listUsers;
+        private System.Windows.Forms.ListView lvChat;
     }
 }

@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Remotes\Messages.cs" />
+    <Compile Include="Remotes\RemoteNew.cs" />
     <Compile Include="Views\ChatRoom.cs">
       <SubType>Form</SubType>
     </Compile>
