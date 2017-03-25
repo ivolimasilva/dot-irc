@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Runtime.Remoting;
 
 namespace Client
@@ -11,10 +10,6 @@ namespace Client
         {
             // Read configuration xml file
             RemotingConfiguration.Configure("Client.exe.config", false);
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Home());
         }
     }
 }
