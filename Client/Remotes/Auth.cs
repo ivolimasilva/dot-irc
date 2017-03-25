@@ -23,5 +23,10 @@ namespace Client.Remotes
         {            
             return remoteAuth.register(_username, _name, _password);
         }
+
+        public bool logout(string _username)
+        {
+            return remoteAuth.logout(_username);
+        }
     }
 }
