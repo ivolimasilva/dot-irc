@@ -27,24 +27,37 @@ namespace Client.Views
             HandlerEventRepeater evRepeater = new HandlerEventRepeater();
             evRepeater.onChange += new Handler(messageHandler);
             remoteMessages.onChange += new Handler(evRepeater.Repeater);
+
+            lvChat.Columns.Add("Source", 100);
+            lvChat.Columns.Add("Destination", 100);
+            lvChat.Columns.Add("Content", 500);
         }
 
         private void messageHandler(List<Common.Message> messages)
         {
+            lvChat.Clear();
             // Receives List of messages updated
+            messages.ForEach(delegate (Common.Message message)
+            {
+                ListViewItem item;
+                string[] arr = new string[4];
+
+                arr[0] = message.Source();
+                arr[1] = message.Destination();
+                arr[2] = message.Content();
+
+                item = new ListViewItem(arr);
+                lvChat.Items.Add(item);
+            });
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            SendMessage();
-        }
-
-        private void SendMessage()
-        {
             if (txtboxChat.Text.Trim().Length > 0)
             {
                 // Creates the call to server, sending the message with txtboxChat.Text
-                txtboxChat.Text = "";
+                remoteMessages.send(new Common.Message("Source", "Destination", txtboxChat.Text));
+                txtboxChat.Clear();
             }
         }
 
