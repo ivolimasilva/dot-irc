@@ -12,10 +12,9 @@ namespace Common
             return null;
         }
 
-        public void Repeater(List<String> messages)
+        public void Repeater(List<Message> messages)
         {
-            if (onChange != null)
-                onChange(messages);
+            onChange?.Invoke(messages);
         }
     }
 }
