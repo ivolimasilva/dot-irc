@@ -1,4 +1,5 @@
-﻿using Client.Remotes;
+﻿using Common;
+using Client.Remotes;
 using Client.Views;
 using System.Windows.Forms;
 
@@ -6,47 +7,42 @@ namespace Client
 {
     public partial class Home : Form
     {
-        private Auth auth;
-        //static ChatRoom chatRoom;
+        private IAuth remoteAuth;
 
         public Home()
         {
             InitializeComponent();
-            auth = new Auth();
-            
+            remoteAuth = (IAuth)RemoteNew.New(typeof(IAuth));
         }
 
         private void btnRegister_Click(object sender, System.EventArgs e)
         {
-            if (auth.register(txtUsername.Text, txtName.Text, txtPassword.Text))
+            if (remoteAuth.register(txtUsername.Text, txtName.Text, txtPassword.Text))
             {
                 lblStatus.Text = "User registered. You may login.";
                 txtUsername.Text = "";
                 txtName.Text = "";
                 txtPassword.Text = "";
-            }                
+            }
             else
                 lblStatus.Text = "Registration failed.";
         }
 
         private void btnLogin_Click(object sender, System.EventArgs e)
         {
-            if(auth.login(txtUsernameLogin.Text, txtPasswordLogin.Text))
+            User user = remoteAuth.login(txtUsernameLogin.Text, txtPasswordLogin.Text);
+
+            if (user == null)
             {
-                //create something to destroy this form
-                lblStatusLogin.Text = "Login succeded, creating ChatRoom";
-                //this.Close();
-                //this.Hide();
-                this.Visible = false;
-                ChatRoom chatRoom = new ChatRoom();
-                chatRoom.getUserName(txtUsernameLogin.Text);
-                chatRoom.ShowDialog();
-                txtUsernameLogin.Text = "";
-                txtPasswordLogin.Text = "";
-                this.Close();
-                //this.Visible = true;
+                lblStatusLogin.Text = "Login failed, try again.";
             }
-            else lblStatusLogin.Text = "Login failed, try again.";
+            else
+            {
+                ChatRoom chatRoom = new ChatRoom(user);
+                this.Hide();
+                chatRoom.ShowDialog();
+                this.Close();
+            }
         }
     }
 }
