@@ -56,16 +56,19 @@
             // 
             this.rtxtboxChat.Location = new System.Drawing.Point(85, -1);
             this.rtxtboxChat.Name = "rtxtboxChat";
+            this.rtxtboxChat.ReadOnly = true;
             this.rtxtboxChat.Size = new System.Drawing.Size(783, 588);
             this.rtxtboxChat.TabIndex = 2;
             this.rtxtboxChat.Text = "";
             // 
             // listUsers
             // 
+            this.listUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listUsers.FormattingEnabled = true;
+            this.listUsers.ItemHeight = 17;
             this.listUsers.Location = new System.Drawing.Point(-2, -1);
             this.listUsers.Name = "listUsers";
-            this.listUsers.Size = new System.Drawing.Size(81, 615);
+            this.listUsers.Size = new System.Drawing.Size(85, 599);
             this.listUsers.TabIndex = 3;
             // 
             // ChatRoom
@@ -79,7 +82,7 @@
             this.Controls.Add(this.txtboxChat);
             this.Name = "ChatRoom";
             this.Text = "ChatRoom";
-            this.Load += new System.EventHandler(this.closeChatRoom);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeChatRoom);
             this.ResumeLayout(false);
             this.PerformLayout();
 
