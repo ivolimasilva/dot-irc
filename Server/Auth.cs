@@ -1,15 +1,17 @@
-﻿using System;
-using Common;
+﻿using Common;
 using Server.Utils;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
+using System.Threading;
 
 namespace Server
 {
     class Auth : MarshalByRefObject, IAuth
     {
+        public event UserHandler onChange;
+
         private static List<User> users = new List<User>();
-        //private Auth usersList = new Auth();
 
         public override ObjRef CreateObjRef(Type requestedType)
         {
@@ -23,6 +25,16 @@ namespace Server
             });
 
             return base.CreateObjRef(requestedType);
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
+        public List<User> Users()
+        {
+            return users;
         }
 
         public bool register(string _username, string _name, string _password)
@@ -49,34 +61,34 @@ namespace Server
                 // Save updated users' list to file
                 Files.Save(Files.filename, users);
 
+                broadcast(users);
                 return true;
             }
             catch
-            {   
+            {
                 return false;
             }
         }
 
-        public bool login(string _username, string _password)
+        public User login(string _username, string _password)
         {
             // Temporary object for the user
-            User _user = new User(_username, _password);
+            User test_user = new User(_username, _password);
 
             // Checks if the user exists in the List (uses Equals to compare)
-            if (users.Exists(user => user.Equals(_user) && !user.online))
+            if (users.Exists(user => user.Equals(test_user) && !user.online))
             {
-                users.Find(user => user.Equals(_user)).online = true;                
-                Console.Write(_user.username);
-                Console.WriteLine(" entered the General ChatRoom!");
-                Console.WriteLine("Success!\n");
-                //usersList.getUsers();               
-                return true;
+                User _user = users.Find(user => user.Equals(test_user));
+                _user.online = true;
+                _user.port = 1024 + users.Count;
+                broadcast(users);
+                return _user;
             }
             else
             {
                 Console.WriteLine("Login failed.\n");
-                return false;
-            }            
+                return null;
+            }
         }
 
         public bool logout(string _username)
@@ -87,6 +99,7 @@ namespace Server
                 users.Find(user => user.Equals(_user)).online = false;
                 Console.Write(_user.username);
                 Console.WriteLine(" exited the General ChatRoom!");
+                broadcast(users);
                 return true;
             }
             else
@@ -94,6 +107,31 @@ namespace Server
                 Console.WriteLine("Logout failed.\n");
                 return false;
             }
-        }    
+        }
+
+        private void broadcast(List<User> users)
+        {
+            if (onChange != null)
+            {
+                Delegate[] invkList = onChange.GetInvocationList();
+
+                foreach (UserHandler handler in invkList)
+                {
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler(users);
+                            Console.WriteLine("Invoking event handler");
+                        }
+                        catch (Exception)
+                        {
+                            onChange -= handler;
+                            Console.WriteLine("Exception: Removed an event handler");
+                        }
+                    }).Start();
+                }
+            }
+        }
     }
 }

@@ -9,73 +9,53 @@ namespace Client.Views
 {
     public partial class ChatRoom : Form
     {
-        private static List<User> users = new List<User>();
-        private Auth auth;
-        internal string userNickname;
+        private List<User> users;
+        private IAuth remoteAuth;
+        private User user;
 
-        private IMessages remoteMessages;
-
-        public ChatRoom()
+        public ChatRoom(User _user)
         {
             InitializeComponent();
-            auth = new Auth();
-            updateUserList();
-            listUsers.SelectedValueChanged += new EventHandler(listUsers_SelectedValueChanged);
+            remoteAuth = (IAuth)RemoteNew.New(typeof(IAuth));
+            UserHandlerEventRepeater userRepeater = new UserHandlerEventRepeater();
 
-            // Messages
-            remoteMessages = (IMessages)RemoteNew.New(typeof(IMessages));
-            HandlerEventRepeater evRepeater = new HandlerEventRepeater();
-            evRepeater.onChange += new Handler(messageHandler);
-            remoteMessages.onChange += new Handler(evRepeater.Repeater);
+            // Set current user
+            user = _user;
 
-            lvChat.Columns.Add("Source", 100);
-            lvChat.Columns.Add("Destination", 100);
-            lvChat.Columns.Add("Content", 500);
+            // Initialize list of users
+            // users = new List<User>();
+
+            // Get list of users and set listener for users' changes
+            users = remoteAuth.Users();
+            updateUserList(users);
+
+            userRepeater.onChange += new UserHandler(userListener);
+            remoteAuth.onChange += new UserHandler(userRepeater.Repeater);
+
+            //listUsers.SelectedValueChanged += new EventHandler(listUsers_SelectedValueChanged);
         }
 
-        private void messageHandler(List<Common.Message> messages)
+        private void userListener(List<User> _users)
         {
-            lvChat.Clear();
-            // Receives List of messages updated
-            messages.ForEach(delegate (Common.Message message)
-            {
-                ListViewItem item;
-                string[] arr = new string[4];
-
-                arr[0] = message.Source();
-                arr[1] = message.Destination();
-                arr[2] = message.Content();
-
-                item = new ListViewItem(arr);
-                lvChat.Items.Add(item);
-            });
-        }
-
-        private void btnSend_Click(object sender, EventArgs e)
-        {
-            if (txtboxChat.Text.Trim().Length > 0)
-            {
-                // Creates the call to server, sending the message with txtboxChat.Text
-                remoteMessages.send(new Common.Message("Source", "Destination", txtboxChat.Text));
-                txtboxChat.Clear();
-            }
-        }
-
-        public void getUserName(string userName)
-        {
-            userNickname = userName;
+            users = _users;
+            updateUserList(users);
+            /*
+            listUsers.DataSource = users;
+            listUsers.DrawMode = DrawMode.OwnerDrawFixed;
+            listUsers.DrawItem += new DrawItemEventHandler(listUsers_DrawItem);
+            listUsers.DisplayMember = "Username";
+            */
         }
 
         private void closeChatRoom(object sender, FormClosedEventArgs e)
         {
-            auth.logout(userNickname);
-            txtboxChat.Text = "";
+            remoteAuth.logout(user.username);
             this.Close();
         }
 
-        private void updateUserList()
+        private void updateUserList(List<User> users)
         {
-            User user1 = new User("Daniel", "Nunes", "");
+          /*  User user1 = new User("Daniel", "Nunes", "");
             user1.online = true;
             User user2 = new User("Ivo", "Lima", "");
             user2.online = true;
@@ -86,14 +66,12 @@ namespace Client.Views
             users.Add(user1);
             users.Add(user2);
             users.Add(user3);
-            users.Add(user4);
+            users.Add(user4);*/
 
             listUsers.DataSource = users;
             listUsers.DrawMode = DrawMode.OwnerDrawFixed;
             listUsers.DrawItem += new DrawItemEventHandler(listUsers_DrawItem);
             listUsers.DisplayMember = "Username";
-
-            //listUsers.ValueMember = "Name";           
         }
 
         private void listUsers_SelectedValueChanged(object sender, EventArgs e)

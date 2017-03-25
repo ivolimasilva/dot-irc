@@ -22,7 +22,8 @@ namespace Server.Utils
                         new XAttribute("ID", _users.IndexOf(user)),
                         new XElement("Name", user.name),
                         new XElement("Username", user.username),
-                        new XElement("Password", user.password)));
+                        new XElement("Password", user.password),
+                        new XElement("Port", user.port)));
 
                 file.Save(_filename);
                 Console.WriteLine("Users's file updated.");
@@ -43,7 +44,7 @@ namespace Server.Utils
             List<User> users =
                 file.Root
                 .Elements("User")
-                .Select(_user => new User((string)_user.Element("Username"), (string)_user.Element("Name"), (string)_user.Element("Password"))).ToList();
+                .Select(_user => new User((string)_user.Element("Username"), (string)_user.Element("Name"), (string)_user.Element("Password"), (int)_user.Element("Port"))).ToList();
 
             return users;
         }

@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messaging\HandlerEventRepeater.cs" />
+    <Compile Include="UserManagement\UserHandlerEventRepeater.cs" />
+    <Compile Include="Utils\HandlerEventRepeater.cs" />
     <Compile Include="Messaging\IMessages.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="UserManagement\IAuth.cs" />
