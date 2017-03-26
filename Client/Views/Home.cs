@@ -38,7 +38,7 @@ namespace Client
             }
             else
             {
-                ChatRoom chatRoom = new ChatRoom(user);
+                Dashboard chatRoom = new Dashboard(user);
                 this.Hide();
                 chatRoom.ShowDialog();
                 this.Close();
