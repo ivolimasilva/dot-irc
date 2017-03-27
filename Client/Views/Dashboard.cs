@@ -82,21 +82,25 @@ namespace Client.Views
             Brush myBrush = Brushes.Black;
             FontStyle myFont = FontStyle.Regular;
 
-            switch (filteredUsers[e.Index].online)
+            if (filteredUsers.Count > 0)
             {
-                case true:
-                    myBrush = Brushes.Green;
-                    myFont = FontStyle.Bold;
-                    break;
-                case false:
-                    myBrush = Brushes.Gray;
-                    break;
+                switch (filteredUsers[e.Index].online)
+                {
+                    case true:
+                        myBrush = Brushes.Green;
+                        myFont = FontStyle.Bold;
+                        break;
+                    case false:
+                        myBrush = Brushes.Gray;
+                        break;
+                }
+                // Draw the current item text based on Font  and the custom brush settings.
+                e.Graphics.DrawString(filteredUsers[e.Index].username, new Font("Calibri", 11.75F, myFont), myBrush, e.Bounds, StringFormat.GenericDefault);
             }
 
-            // Draw the current item text based on Font  and the custom brush settings.
-            e.Graphics.DrawString(filteredUsers[e.Index].username, new Font("Calibri", 11.75F, myFont), myBrush, e.Bounds, StringFormat.GenericDefault);
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
+
         }
 
         private void btnStartChat_Click(object sender, EventArgs e)
