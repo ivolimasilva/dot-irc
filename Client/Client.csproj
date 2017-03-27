@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Remotes\Messages.cs" />
     <Compile Include="Remotes\RemoteNew.cs" />
+    <Compile Include="Services\Requests.cs" />
     <Compile Include="Views\ChatRoom.cs">
       <SubType>Form</SubType>
     </Compile>

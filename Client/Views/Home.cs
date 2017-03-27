@@ -2,6 +2,7 @@
 using Client.Remotes;
 using Client.Views;
 using System.Windows.Forms;
+using Common.Utils;
 
 namespace Client
 {
@@ -30,7 +31,7 @@ namespace Client
 
         private void btnLogin_Click(object sender, System.EventArgs e)
         {
-            User user = remoteAuth.login(txtUsernameLogin.Text, txtPasswordLogin.Text);
+            User user = remoteAuth.login(txtUsernameLogin.Text, txtPasswordLogin.Text, new IP(IP.GetLocalIPAddress()));
 
             if (user == null)
             {

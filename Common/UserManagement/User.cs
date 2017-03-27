@@ -9,6 +9,7 @@ namespace Common
         public string name { get; set; }
         public string password { get; set; }
         public bool online { get; set; }
+        public Utils.IP ip { get; set; }
         public int port { get; set; }
 
         public User(string _username, string _name, string _password, int _port)
@@ -16,8 +17,8 @@ namespace Common
             username = _username;
             name = _name;
             password = _password;
-            online = false;
             port = _port;
+            online = false;
         }
 
         public User(string _username, string _name, string _password)
@@ -25,6 +26,14 @@ namespace Common
             username = _username;
             name = _name;
             password = _password;
+            online = false;
+        }
+
+        public User(string _username, string _password, Utils.IP _ip)
+        {
+            username = _username;
+            password = _password;
+            ip = _ip;
             online = false;
         }
 

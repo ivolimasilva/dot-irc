@@ -45,12 +45,12 @@
             // 
             // lblUserName
             // 
-            this.lblUserName.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblUserName.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblUserName.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserName.Location = new System.Drawing.Point(174, 9);
+            this.lblUserName.Location = new System.Drawing.Point(12, 9);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblUserName.Size = new System.Drawing.Size(161, 23);
+            this.lblUserName.Size = new System.Drawing.Size(313, 18);
             this.lblUserName.TabIndex = 4;
             this.lblUserName.Text = "Logged as";
             this.lblUserName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

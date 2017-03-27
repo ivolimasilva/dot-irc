@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Utils;
 using Server.Utils;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,9 @@ namespace Server
             // Adds the new user to the List
             try
             {
+                _user.port = 1024 + users.Count;
                 users.Add(_user);
+
                 Console.WriteLine("Success!");
 
                 // Save updated users' list to file
@@ -70,17 +73,17 @@ namespace Server
             }
         }
 
-        public User login(string _username, string _password)
+        public User login(string _username, string _password, IP _ip)
         {
             // Temporary object for the user
-            User test_user = new User(_username, _password);
+            User test_user = new User(_username, _password, _ip);
 
             // Checks if the user exists in the List (uses Equals to compare)
             if (users.Exists(user => user.Equals(test_user) && !user.online))
             {
                 User _user = users.Find(user => user.Equals(test_user));
                 _user.online = true;
-                _user.port = 1024 + users.Count;
+                _user.ip = _ip;
                 broadcast(users);
                 return _user;
             }
