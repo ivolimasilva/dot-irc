@@ -38,9 +38,9 @@ namespace Client
             }
             else
             {
-                Dashboard chatRoom = new Dashboard(user);
+                Dashboard dashBoard = new Dashboard(user);
                 this.Hide();
-                chatRoom.ShowDialog();
+                dashBoard.ShowDialog();
                 this.Close();
             }
         }

@@ -76,7 +76,7 @@
             this.Controls.Add(this.listUsers);
             this.Name = "Dashboard";
             this.Text = "Dashboard";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeChatRoom);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeDashBoard);
             this.ResumeLayout(false);
 
         }

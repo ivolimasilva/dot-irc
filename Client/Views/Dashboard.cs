@@ -29,6 +29,7 @@ namespace Client.Views
 
             // Get list of users and set listener for users' changes
             users = remoteAuth.Users();
+            
             updateUserList(users);
 
             userRepeater.onChange += new UserHandler(userListener);
@@ -40,7 +41,7 @@ namespace Client.Views
             users = _users;
         }
 
-        private void closeChatRoom(object sender, FormClosedEventArgs e)
+        private void closeDashBoard(object sender, FormClosedEventArgs e)
         {
             remoteAuth.logout(user.username);
             this.Close();
@@ -50,9 +51,10 @@ namespace Client.Views
         {                        
             // Removes current logged user from the list
             // Not working as intended :/ 
-            users.Remove(user);
+            //users.Remove(user);
 
             listUsers.DataSource = users;
+            
           //  listUsers.Items.Remove(user); // this breaks the program
             listUsers.DrawMode = DrawMode.OwnerDrawFixed;       
             listUsers.DrawItem += new DrawItemEventHandler(listUsers_DrawItem);
@@ -66,7 +68,7 @@ namespace Client.Views
             // Define the default color of the brush as black.
             Brush myBrush = Brushes.Black;
             FontStyle myFont = FontStyle.Regular;
-
+            
             switch (users[e.Index].online)
             {
                 case true:
@@ -88,9 +90,14 @@ namespace Client.Views
         {
             if (listUsers.SelectedIndex != -1)
             {
-                // TODO: Create New SingleChatClient here                
+                // Next 2 lines are for "debugging"/information         
                 string text = "Talk to " + ((User)listUsers.SelectedValue).username + "?";
                 MessageBox.Show(text);
+
+                ChatRoom chatRoom = new ChatRoom(user);
+                //chatRoom.ShowDialog();
+                chatRoom.Show();
+                //this.Close();
             }           
         }
     }
