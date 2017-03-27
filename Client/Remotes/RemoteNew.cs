@@ -22,7 +22,8 @@ namespace Client.Remotes
             WellKnownClientTypeEntry entry = (WellKnownClientTypeEntry)types[type];
             if (entry == null)
                 throw new RemotingException("Type not found!");
-            return RemotingServices.Connect(type, entry.ObjectUrl);
+            return
+                RemotingServices.Connect(type, entry.ObjectUrl);
         }
     }
 }

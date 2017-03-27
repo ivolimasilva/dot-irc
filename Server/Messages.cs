@@ -8,7 +8,7 @@ namespace Server
 {
     public class Messages : MarshalByRefObject, IMessages
     {
-        public event Handler onChange;
+        public event MessageHandler onChange;
         private List<Message> messages;
 
         public override ObjRef CreateObjRef(Type requestedType)
@@ -39,7 +39,7 @@ namespace Server
             {
                 Delegate[] invkList = onChange.GetInvocationList();
 
-                foreach (Handler handler in invkList)
+                foreach (MessageHandler handler in invkList)
                 {
                     new Thread(() =>
                     {

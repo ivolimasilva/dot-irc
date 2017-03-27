@@ -2,6 +2,7 @@
 using Common;
 using Client.Utils;
 using System.Collections.Generic;
+using Common.Utils;
 
 namespace Client.Remotes
 {
@@ -17,9 +18,9 @@ namespace Client.Remotes
             remoteAuth = (IAuth)Activator.GetObject(typeof(IAuth), url);
         }
 
-        public User login(string _username, string _password)
+        public User login(string _username, string _password, IP _ip)
         {
-            return remoteAuth.login(_username, _password);
+            return remoteAuth.login(_username, _password, _ip);
         }
 
         public bool register(string _username, string _name, string _password)

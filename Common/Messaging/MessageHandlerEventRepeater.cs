@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Common
 {
-    public class HandlerEventRepeater : MarshalByRefObject
+    public class MessageHandlerEventRepeater : MarshalByRefObject
     {
-        public event Handler onChange;
+        public event MessageHandler onChange;
 
         public override object InitializeLifetimeService()
         {

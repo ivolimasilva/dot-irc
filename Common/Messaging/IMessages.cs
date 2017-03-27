@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Common
 {
-    public delegate void Handler(List<Message> _messages);
+    public delegate void MessageHandler(List<Message> _messages);
 
     public interface IMessages
     {
-        event Handler onChange;
-        List<Message> getMessages();
+        event MessageHandler onChange;
         void send(Message _message);
     }
 }
