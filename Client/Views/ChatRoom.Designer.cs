@@ -55,6 +55,7 @@
             // 
             this.rchtxtboxChat.Location = new System.Drawing.Point(12, 12);
             this.rchtxtboxChat.Name = "rchtxtboxChat";
+            this.rchtxtboxChat.ReadOnly = true;
             this.rchtxtboxChat.Size = new System.Drawing.Size(469, 364);
             this.rchtxtboxChat.TabIndex = 2;
             this.rchtxtboxChat.Text = "";
@@ -69,7 +70,6 @@
             this.Controls.Add(this.txtboxChat);
             this.Name = "ChatRoom";
             this.Text = "ChatRoom";
-           // this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeChatRoom);            
             this.ResumeLayout(false);
             this.PerformLayout();
 

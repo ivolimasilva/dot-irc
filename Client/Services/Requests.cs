@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Client.Views;
+using Common;
 using System;
 using System.Windows.Forms;
 
@@ -9,6 +10,8 @@ namespace Client
         public bool ask(User _user)
         {
             DialogResult dialogResult = MessageBox.Show("Request from " + _user.name + " (" + _user.ip + ":" + _user.port + ")?", "Start dialog?", MessageBoxButtons.OKCancel);
+            ChatRoom chatRoom = new ChatRoom(_user);
+            chatRoom.Show();
             return dialogResult == DialogResult.OK;
         }
     }

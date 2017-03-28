@@ -107,6 +107,7 @@ namespace Client.Views
         {
             if (listUsers.SelectedIndex != -1)
             {
+                User userSelected = (User)listUsers.SelectedValue;
                 String url = "tcp://" + ((User)listUsers.SelectedValue).ip + ":" + ((User)listUsers.SelectedValue).port + "/Request";
 
                 var channels = ChannelServices.RegisteredChannels;
@@ -115,13 +116,13 @@ namespace Client.Views
                 if (RemotingConfiguration.GetRegisteredWellKnownClientTypes().Any(client => client.ObjectUrl == url))
                     RemotingConfiguration.RegisterWellKnownClientType(new WellKnownClientTypeEntry(typeof(IRequests), url));
 
-                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);
+                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);                
 
                 if (remoteRequests.ask(user))
                 {
                     // Open chatroom
-                    ChatRoom chatRoom = new ChatRoom(user);
-                    chatRoom.Show();
+                    ChatRoom chatRoom = new ChatRoom(user, userSelected);
+                    chatRoom.Show();     
                 }
                 else
                 {
