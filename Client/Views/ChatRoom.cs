@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Security.Permissions;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Client.Utils;
 
 namespace Client.Views
 {
@@ -60,7 +62,13 @@ namespace Client.Views
         // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            XDocument file = XDocument.Load(e.FullPath);
+            XDocument file;
+            using (var mutex = new Mutex(false, "Message"))
+            {
+                mutex.WaitOne();
+                file = XDocument.Load(e.FullPath);
+                mutex.ReleaseMutex();
+            }
 
             messages =
                 file.Root

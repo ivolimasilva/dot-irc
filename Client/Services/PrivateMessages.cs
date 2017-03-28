@@ -1,14 +1,17 @@
-﻿using Common;
+﻿using Client.Utils;
+using Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace Client
 {
     class PrivateMessages : MarshalByRefObject, IPrivateMessages
     {
+        private EventWaitHandle waitHandle = new EventWaitHandle(true, EventResetMode.AutoReset, "SHARED_BY_ALL_PROCESSES");
+
         private static string filenameExt = ".xml";
 
         private List<Message> messages = new List<Message>();
@@ -31,7 +34,12 @@ namespace Client
                     new XElement("Destination", message.Destination()),
                     new XElement("Content", message.Content())));
 
-                file.Save(filename);
+                using (var mutex = new Mutex(false, "Message"))
+                {
+                    mutex.WaitOne();
+                    file.Save(filename);
+                    mutex.ReleaseMutex();
+                }
             }
             catch (Exception e)
             {

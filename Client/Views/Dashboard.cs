@@ -10,6 +10,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Client.Views
 {
@@ -24,7 +25,10 @@ namespace Client.Views
         // Remote object for the Authentication module
         private IAuth remoteAuth;
 
+        // List of users without logged user
         private List<User> filteredUsers;
+
+        private static string filenameExt = ".xml";
 
         public Dashboard(User _user)
         {
@@ -35,6 +39,9 @@ namespace Client.Views
             // Set current user
             user = _user;
             lblUserName.Text = "Logged as " + user.name;
+
+            // Clear messages file
+            File.Delete("./messages-" + user.username + filenameExt);
 
             // Register own channel
             TcpChannel channel = (TcpChannel)Remoting.GetChannel(user.port, false);
@@ -103,8 +110,8 @@ namespace Client.Views
         {
             if (listUsers.SelectedIndex != -1)
             {
-                User userSelected = (User)listUsers.SelectedValue;
-                String url = "tcp://" + ((User)listUsers.SelectedValue).ip + ":" + ((User)listUsers.SelectedValue).port + "/Request";
+                User userSelected = filteredUsers[listUsers.SelectedIndex];
+                String url = "tcp://" + userSelected.ip + ":" + userSelected.port + "/Request";
 
                 var channels = ChannelServices.RegisteredChannels;
 
