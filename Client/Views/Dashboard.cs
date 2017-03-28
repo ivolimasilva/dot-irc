@@ -64,10 +64,6 @@ namespace Client.Views
 
         private void updateUserList(List<User> users)
         {
-            // Removes current logged user from the list
-            // Not working as intended :/ 
-            //users.Remove(user);
-
             listUsers.DataSource = filteredUsers;
             listUsers.DrawMode = DrawMode.OwnerDrawFixed;
             listUsers.DrawItem += new DrawItemEventHandler(listUsers_DrawItem);
@@ -121,10 +117,6 @@ namespace Client.Views
                 if (remoteRequests.ask(user, userSelected))
                 {
                     // Open chatroom
-                    /*
-                    ChatRoom chatRoom = new ChatRoom(user, userSelected);
-                    chatRoom.Show();
-                    */
                     new Thread(() =>
                     {
                         Application.Run(new ChatRoom(user, userSelected));
@@ -134,17 +126,6 @@ namespace Client.Views
                 {
                     // Other user declined
                 }
-
-                /*
-                // Next 2 lines are for "debugging"/information         
-                string text = "Talk to " + ((User)listUsers.SelectedValue).username + "?";
-                MessageBox.Show(text);
-
-                ChatRoom chatRoom = new ChatRoom(user);
-                //chatRoom.ShowDialog();
-                chatRoom.Show();
-                //this.Close();
-                */
             }
         }
     }

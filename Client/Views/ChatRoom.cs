@@ -1,16 +1,17 @@
-﻿using Client.Remotes;
-using Client.Utils;
-using Common;
+﻿using Common;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
+using System.Security.Permissions;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Client.Views
 {
-    public partial class ChatRoom : Form, IPrivateMessages
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+    public partial class ChatRoom : Form
     {
         // Remote object for the other client
         private IPrivateMessages remoteClient;
@@ -21,6 +22,8 @@ namespace Client.Views
         // Represents the destination user
         private User userDestination;
 
+        private List<Common.Message> messages = new List<Common.Message>();
+
         public ChatRoom(User _userSource, User _userDestination)
         {
             InitializeComponent();
@@ -30,8 +33,6 @@ namespace Client.Views
 
             this.Text = userDestination.name;
 
-            RemotingConfiguration.RegisterWellKnownServiceType(new WellKnownServiceTypeEntry(typeof(IPrivateMessages), "/Message", WellKnownObjectMode.Singleton));
-
             #region WellKnwown Client Registration
             string url = "tcp://" + userDestination.ip + ":" + userDestination.port + "/Message";
 
@@ -40,6 +41,46 @@ namespace Client.Views
 
             remoteClient = (IPrivateMessages)Activator.GetObject(typeof(IPrivateMessages), url);
             #endregion
+
+            #region File watcher
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = ".";
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            watcher.Filter = "messages-" + userSource.username + ".xml";
+
+            // Add event handlers.
+            watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+            #endregion
+        }
+
+        // Define the event handlers.
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            XDocument file = XDocument.Load(e.FullPath);
+
+            messages =
+                file.Root
+                .Elements("Message")
+                .Select(_message => new Common.Message(
+                    (string)_message.Element("Source"),
+                    (string)_message.Element("Destination"),
+                    (string)_message.Element("Content"))).ToList();
+
+            foreach (var message in messages)
+            {
+                if (this.rtbMessages.InvokeRequired)
+                {
+                    this.rtbMessages.BeginInvoke((MethodInvoker)delegate () { rtbMessages.AppendText(message.Content()); });
+                }
+                else
+                {
+                    rtbMessages.AppendText(message.Content());
+                }
+            }
         }
 
         private void btnSendMsg_Click(object sender, EventArgs e)
@@ -49,23 +90,19 @@ namespace Client.Views
                 Common.Message msgInfo = new Common.Message(userSource.username, userDestination.username, txtboxChat.Text);
                 remoteClient.send(msgInfo);
 
-                update(msgInfo);
+                //update(msgInfo);
                 txtboxChat.Text = "";
             }
         }
 
         private void update(Common.Message msgInfo)
         {
+            /*
             rchtxtboxChat.AppendText(DateTime.Now.ToString("h:mm tt") + "- " + msgInfo.Source() + " : " + msgInfo.Content() + "\n");
             if (userSource.username == msgInfo.Source())
                 rchtxtboxChat.SelectionColor = System.Drawing.Color.Green;
-        }
-
-        public void send(Common.Message _message)
-        {
-            // Receives message here - don't mistake with remoteClient.send(...)
-            var msg = _message;
-            update(_message);
+            */
+            //rchtxtboxChat.AppendText(msgInfo.Content());
         }
     }
 }
