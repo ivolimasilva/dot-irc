@@ -7,7 +7,7 @@ namespace Common.Utils
     [Serializable]
     public class IP
     {
-        string address { get; set; }
+        private string address;
 
         public IP(string _address)
         {
