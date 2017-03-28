@@ -70,6 +70,8 @@ namespace Client.Views
                 mutex.ReleaseMutex();
             }
 
+            messages.Clear();
+
             messages =
                 file.Root
                 .Elements("Message")
@@ -78,39 +80,90 @@ namespace Client.Views
                     (string)_message.Element("Destination"),
                     (string)_message.Element("Content"))).ToList();
 
-            foreach (var message in messages)
-            {
-                if (this.rtbMessages.InvokeRequired)
-                {
-                    this.rtbMessages.BeginInvoke((MethodInvoker)delegate () { rtbMessages.AppendText(message.Content()); });
-                }
-                else
-                {
-                    rtbMessages.AppendText(message.Content());
-                }
-            }
+            update();
         }
 
         private void btnSendMsg_Click(object sender, EventArgs e)
         {
             if (txtboxChat.Text.Trim().Length > 0)
             {
-                Common.Message msgInfo = new Common.Message(userSource.username, userDestination.username, txtboxChat.Text);
-                remoteClient.send(msgInfo);
+                Common.Message _message = new Common.Message(userSource.username, userDestination.username, txtboxChat.Text);
+                remoteClient.send(_message);
 
-                //update(msgInfo);
-                txtboxChat.Text = "";
+                messages.Add(_message);
+                update();
+
+                // Save Messages to a file
+                try
+                {
+                    string filename = "./messages-" + _message.Destination() + ".xml";
+
+                    XElement file = new XElement("Messages",
+                        from message in messages
+                        select new XElement("Message",
+                        new XAttribute("ID", messages.IndexOf(message)),
+                        new XElement("Source", message.Source()),
+                        new XElement("Destination", message.Destination()),
+                        new XElement("Content", message.Content())));
+
+                    using (var mutex = new Mutex(false, "Message"))
+                    {
+                        mutex.WaitOne();
+                        file.Save(filename);
+                        mutex.ReleaseMutex();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                txtboxChat.Clear();
             }
         }
 
-        private void update(Common.Message msgInfo)
+        private void update()
         {
-            /*
-            rchtxtboxChat.AppendText(DateTime.Now.ToString("h:mm tt") + "- " + msgInfo.Source() + " : " + msgInfo.Content() + "\n");
-            if (userSource.username == msgInfo.Source())
-                rchtxtboxChat.SelectionColor = System.Drawing.Color.Green;
-            */
-            //rchtxtboxChat.AppendText(msgInfo.Content());
+            if (rtbMessages.InvokeRequired)
+                rtbMessages.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    rtbMessages.Clear();
+                });
+            else
+                rtbMessages.Clear();
+
+            foreach (var message in messages)
+            {
+                if (rtbMessages.InvokeRequired)
+                {
+                    rtbMessages.BeginInvoke((MethodInvoker)delegate ()
+                    {
+                        if (userSource.username == message.Source())
+                            rtbMessages.SelectionColor = System.Drawing.Color.Green;
+                        else
+                            rtbMessages.SelectionColor = System.Drawing.Color.Black;
+
+                        rtbMessages.AppendText(message.Source() + " : " + message.Content());
+                        rtbMessages.AppendText(Environment.NewLine);
+                    });
+                }
+                else
+                {
+                    if (userSource.username == message.Source())
+                        rtbMessages.SelectionColor = System.Drawing.Color.Green;
+                    else
+                        rtbMessages.SelectionColor = System.Drawing.Color.Black;
+
+                    rtbMessages.AppendText(message.Source() + " : " + message.Content());
+                    rtbMessages.AppendText(Environment.NewLine);
+                }
+            }
+        }
+
+        private void closeChatroom(object sender, FormClosedEventArgs e)
+        {
+            // Clear messages file
+            File.Delete("./messages-" + userSource.username + ".xml");
         }
     }
 }

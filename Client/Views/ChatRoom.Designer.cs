@@ -1,4 +1,7 @@
-﻿namespace Client.Views
+﻿using System;
+using System.Windows.Forms;
+
+namespace Client.Views
 {
     partial class ChatRoom
     {
@@ -71,6 +74,7 @@
             this.Name = "ChatRoom";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChatRoom";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeChatroom);
             this.ResumeLayout(false);
             this.PerformLayout();
 
