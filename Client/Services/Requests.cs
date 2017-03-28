@@ -1,17 +1,25 @@
 ﻿using Client.Views;
 using Common;
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Client
 {
     public class Requests : MarshalByRefObject, IRequests
     {
-        public bool ask(User _user)
+        public bool ask(User _source, User _destination)
         {
-            DialogResult dialogResult = MessageBox.Show("Request from " + _user.name + " (" + _user.ip + ":" + _user.port + ")?", "Start dialog?", MessageBoxButtons.OKCancel);
-            ChatRoom chatRoom = new ChatRoom(_user);
-            chatRoom.Show();
+            DialogResult dialogResult = MessageBox.Show("Request from " + _source.name + " (" + _source.ip + ":" + _source.port + ")?", "Start dialog?", MessageBoxButtons.OKCancel);
+
+            if (dialogResult == DialogResult.OK)
+            {
+                new Thread(() =>
+                {
+                    Application.Run(new ChatRoom(_destination, _source));
+                }).Start();
+            }
+
             return dialogResult == DialogResult.OK;
         }
     }

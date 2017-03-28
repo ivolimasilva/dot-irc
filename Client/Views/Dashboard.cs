@@ -2,13 +2,13 @@
 using Client.Utils;
 using Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Client.Views
@@ -116,13 +116,19 @@ namespace Client.Views
                 if (RemotingConfiguration.GetRegisteredWellKnownClientTypes().Any(client => client.ObjectUrl == url))
                     RemotingConfiguration.RegisterWellKnownClientType(new WellKnownClientTypeEntry(typeof(IRequests), url));
 
-                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);                
+                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);
 
-                if (remoteRequests.ask(user))
+                if (remoteRequests.ask(user, userSelected))
                 {
                     // Open chatroom
+                    /*
                     ChatRoom chatRoom = new ChatRoom(user, userSelected);
-                    chatRoom.Show();     
+                    chatRoom.Show();
+                    */
+                    new Thread(() =>
+                    {
+                        Application.Run(new ChatRoom(user, userSelected));
+                    }).Start();
                 }
                 else
                 {
