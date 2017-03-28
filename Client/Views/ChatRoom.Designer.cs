@@ -30,7 +30,7 @@
         {
             this.txtboxChat = new System.Windows.Forms.TextBox();
             this.btnSendMsg = new System.Windows.Forms.Button();
-            this.rchtxtboxChat = new System.Windows.Forms.RichTextBox();
+            this.rtbMessages = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // txtboxChat
@@ -51,24 +51,25 @@
             this.btnSendMsg.UseVisualStyleBackColor = true;
             this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
             // 
-            // rchtxtboxChat
+            // rtbMessages
             // 
-            this.rchtxtboxChat.Location = new System.Drawing.Point(12, 12);
-            this.rchtxtboxChat.Name = "rchtxtboxChat";
-            this.rchtxtboxChat.ReadOnly = true;
-            this.rchtxtboxChat.Size = new System.Drawing.Size(469, 364);
-            this.rchtxtboxChat.TabIndex = 2;
-            this.rchtxtboxChat.Text = "";
+            this.rtbMessages.Location = new System.Drawing.Point(12, 12);
+            this.rtbMessages.Name = "rtbMessages";
+            this.rtbMessages.ReadOnly = true;
+            this.rtbMessages.Size = new System.Drawing.Size(469, 364);
+            this.rtbMessages.TabIndex = 2;
+            this.rtbMessages.Text = "";
             // 
             // ChatRoom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 412);
-            this.Controls.Add(this.rchtxtboxChat);
+            this.Controls.Add(this.rtbMessages);
             this.Controls.Add(this.btnSendMsg);
             this.Controls.Add(this.txtboxChat);
             this.Name = "ChatRoom";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChatRoom";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -79,6 +80,6 @@
 
         private System.Windows.Forms.TextBox txtboxChat;
         private System.Windows.Forms.Button btnSendMsg;
-        private System.Windows.Forms.RichTextBox rchtxtboxChat;
+        private System.Windows.Forms.RichTextBox rtbMessages;
     }
 }

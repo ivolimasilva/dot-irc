@@ -2,6 +2,6 @@
 {
     public interface IRequests
     {
-        bool ask(User _user);
+        bool ask(User _source, User _destination);
     }
 }

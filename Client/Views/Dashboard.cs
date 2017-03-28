@@ -2,13 +2,13 @@
 using Client.Utils;
 using Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Client.Views
@@ -64,10 +64,6 @@ namespace Client.Views
 
         private void updateUserList(List<User> users)
         {
-            // Removes current logged user from the list
-            // Not working as intended :/ 
-            //users.Remove(user);
-
             listUsers.DataSource = filteredUsers;
             listUsers.DrawMode = DrawMode.OwnerDrawFixed;
             listUsers.DrawItem += new DrawItemEventHandler(listUsers_DrawItem);
@@ -116,29 +112,20 @@ namespace Client.Views
                 if (RemotingConfiguration.GetRegisteredWellKnownClientTypes().Any(client => client.ObjectUrl == url))
                     RemotingConfiguration.RegisterWellKnownClientType(new WellKnownClientTypeEntry(typeof(IRequests), url));
 
-                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);                
+                IRequests remoteRequests = (IRequests)Activator.GetObject(typeof(IRequests), url);
 
-                if (remoteRequests.ask(user))
+                if (remoteRequests.ask(user, userSelected))
                 {
                     // Open chatroom
-                    ChatRoom chatRoom = new ChatRoom(user, userSelected);
-                    chatRoom.Show();     
+                    new Thread(() =>
+                    {
+                        Application.Run(new ChatRoom(user, userSelected));
+                    }).Start();
                 }
                 else
                 {
                     // Other user declined
                 }
-
-                /*
-                // Next 2 lines are for "debugging"/information         
-                string text = "Talk to " + ((User)listUsers.SelectedValue).username + "?";
-                MessageBox.Show(text);
-
-                ChatRoom chatRoom = new ChatRoom(user);
-                //chatRoom.ShowDialog();
-                chatRoom.Show();
-                //this.Close();
-                */
             }
         }
     }
