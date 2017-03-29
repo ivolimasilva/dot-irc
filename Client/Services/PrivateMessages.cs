@@ -32,7 +32,8 @@ namespace Client
                     new XAttribute("ID", messages.IndexOf(message)),
                     new XElement("Source", message.Source()),
                     new XElement("Destination", message.Destination()),
-                    new XElement("Content", message.Content())));
+                    new XElement("Content", message.Content()),
+                    new XElement("End", message.End())));
 
                 using (var mutex = new Mutex(false, "Message"))
                 {

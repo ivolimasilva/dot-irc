@@ -79,7 +79,8 @@ namespace Client.Views
                 .Select(_message => new Common.Message(
                     (string)_message.Element("Source"),
                     (string)_message.Element("Destination"),
-                    (string)_message.Element("Content"))).ToList();
+                    (string)_message.Element("Content"),
+                    (bool)_message.Element("End"))).ToList();
 
             update();
         }
@@ -105,7 +106,8 @@ namespace Client.Views
                         new XAttribute("ID", messages.IndexOf(message)),
                         new XElement("Source", message.Source()),
                         new XElement("Destination", message.Destination()),
-                        new XElement("Content", message.Content())));
+                        new XElement("Content", message.Content()),
+                        new XElement("End", message.End())));
 
                     using (var mutex = new Mutex(false, "Message"))
                     {
@@ -119,6 +121,7 @@ namespace Client.Views
                     throw ex;
                 }
 
+                // Clear input box
                 txtboxChat.Clear();
             }
         }
@@ -135,6 +138,20 @@ namespace Client.Views
 
             foreach (var message in messages)
             {
+                // In case it's a "end message"
+                if (message.End())
+                {
+                    End();
+
+                    if (this.InvokeRequired)
+                    {
+                        this.BeginInvoke((MethodInvoker)delegate ()
+                        {
+                            this.Close();
+                        });
+                    }
+                }
+
                 if (rtbMessages.InvokeRequired)
                 {
                     rtbMessages.BeginInvoke((MethodInvoker)delegate ()
@@ -162,6 +179,14 @@ namespace Client.Views
         }
 
         private void closeChatroom(object sender, FormClosedEventArgs e)
+        {
+            // Send end message
+            remoteClient.send(new Common.Message(userSource.username, userDestination.username, true));
+
+            End();
+        }
+
+        private void End()
         {
             // Clear messages file
             File.Delete("./messages-" + userSource.username + ".xml");
