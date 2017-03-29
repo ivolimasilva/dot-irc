@@ -141,14 +141,21 @@ namespace Client.Views
                 // In case it's a "end message"
                 if (message.End())
                 {
-                    End();
-
-                    if (this.InvokeRequired)
+                    if (MessageBox.Show(userDestination.name + " has closed the conversation.", "End of conversation", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
-                        this.BeginInvoke((MethodInvoker)delegate ()
+                        End();
+
+                        if (this.InvokeRequired)
+                        {
+                            this.BeginInvoke((MethodInvoker)delegate ()
+                            {
+                                this.Close();
+                            });
+                        }
+                        else
                         {
                             this.Close();
-                        });
+                        }
                     }
                 }
 
