@@ -24,6 +24,8 @@ namespace Client.Views
         // Represents the destination user
         private User userDestination;
 
+        private FileSystemWatcher watcher = new FileSystemWatcher();
+
         private List<Common.Message> messages = new List<Common.Message>();
 
         public ChatRoom(User _userSource, User _userDestination)
@@ -45,7 +47,6 @@ namespace Client.Views
             #endregion
 
             #region File watcher
-            FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = ".";
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
             watcher.Filter = "messages-" + userSource.username + ".xml";
@@ -164,6 +165,9 @@ namespace Client.Views
         {
             // Clear messages file
             File.Delete("./messages-" + userSource.username + ".xml");
+
+            // Clear watcher
+            watcher.Dispose();
         }
     }
 }
