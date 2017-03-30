@@ -48,10 +48,28 @@ namespace Client.Views
             #region Load messages from file
             filename = "messages-" + userSource.username + ".xml";
 
-            // Add empty message in the file
-            // TODO
+            LoadMessages(true);
 
-            LoadMessages();
+            // Add empty message in the file
+            messages.Add(new Common.Message(userSource.username, userDestination.username, "---", true));
+
+            XElement fileSave = new XElement("Messages",
+                            from message in messages
+                            select new XElement("Message",
+                            new XAttribute("ID", messages.IndexOf(message)),
+                            new XElement("Source", message.Source()),
+                            new XElement("Destination", message.Destination()),
+                            new XElement("Content", message.Content()),
+                            new XElement("End", message.End())));
+
+            using (var mutex = new Mutex(false, "Message" + userSource.username))
+            {
+                mutex.WaitOne();
+                fileSave.Save(filename);
+                mutex.ReleaseMutex();
+            }
+
+            UpdateMessages();
             #endregion
 
             #region File watcher
@@ -70,10 +88,10 @@ namespace Client.Views
         // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            LoadMessages();
+            LoadMessages(false);
         }
 
-        private void LoadMessages()
+        private void LoadMessages(bool _firstTime)
         {
             messages.Clear();
 
@@ -98,7 +116,8 @@ namespace Client.Views
             // Remove messages from another conversations
             messages.RemoveAll(_message => _message.Destination() != userSource.username && _message.Source() != userSource.username);
 
-            UpdateMessages();
+            if (!_firstTime)
+                UpdateMessages();
         }
 
         private void btnSendMsg_Click(object sender, EventArgs e)
@@ -151,7 +170,7 @@ namespace Client.Views
 
             // If the last message it an end
             if (messages.Count > 0)
-                if (messages.Last().End())
+                if (messages.Last().End() && messages.Last().Content() == "")
                 {
                     if (MessageBox.Show(userDestination.name + " has closed the conversation.", "End of conversation", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
@@ -174,8 +193,10 @@ namespace Client.Views
             // In case of the other messages
             foreach (var message in messages)
             {
-                if (!message.End() || message.Content() != null)
+                if (!message.End())
                 {
+                    // Normal message
+
                     if (rtbMessages.InvokeRequired)
                     {
                         rtbMessages.BeginInvoke((MethodInvoker)delegate ()
@@ -200,6 +221,28 @@ namespace Client.Views
                         rtbMessages.AppendText(Environment.NewLine);
                     }
                 }
+                /*
+                else if (message.End() && message.Content() != null)
+                {
+                    // Start of conversation message
+
+                    if (rtbMessages.InvokeRequired)
+                    {
+                        rtbMessages.BeginInvoke((MethodInvoker)delegate ()
+                        {
+                            rtbMessages.SelectionColor = System.Drawing.Color.Red;
+                            rtbMessages.AppendText(message.Content());
+                            rtbMessages.AppendText(Environment.NewLine);
+                        });
+                    }
+                    else
+                    {
+                        rtbMessages.SelectionColor = System.Drawing.Color.Red;
+                        rtbMessages.AppendText(message.Content());
+                        rtbMessages.AppendText(Environment.NewLine);
+                    }
+                }
+                */
             }
         }
 

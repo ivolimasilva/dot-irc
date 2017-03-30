@@ -68,11 +68,12 @@ namespace Client.Views
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
             watcher.Filter = filename;
 
+            // TODO: Watcher to block who's already in chat so it doesn't allow repeated conversation
             // Add event handlers.
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            // watcher.Changed += new FileSystemEventHandler(OnChanged);
 
             // Begin watching.
-            watcher.EnableRaisingEvents = true;
+            // watcher.EnableRaisingEvents = true;
             #endregion
         }
 
@@ -190,7 +191,7 @@ namespace Client.Views
                 else
                 {
                     // Other user declined
-                    // TODO
+                    MessageBox.Show(userSelected.name + " declined your conversation.", "Conversation denied.", MessageBoxButtons.OK);
                 }
             }
         }
