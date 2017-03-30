@@ -13,8 +13,6 @@ namespace Client
 
         private string filename;
 
-        private List<Message> messages = new List<Message>();
-
         public void send(Message _message)
         {
             // Save Messages to a file
@@ -22,7 +20,7 @@ namespace Client
             {
                 filename = "./messages-" + _message.Destination() + ".xml";
 
-                LoadMessages(_message.Destination());
+                List<Message> messages = LoadMessages(_message.Destination());
 
                 messages.Add(_message);
 
@@ -48,9 +46,9 @@ namespace Client
             }
         }
 
-        private void LoadMessages(String _username)
+        private List<Message> LoadMessages(String _username)
         {
-            messages.Clear();
+            List<Message> messages = new List<Message>();
 
             XDocument file;
             using (var mutex = new Mutex(false, "Message" + _username))
@@ -70,8 +68,7 @@ namespace Client
                     (string)_message.Element("Content"),
                     (bool)_message.Element("End"))).ToList();
 
-            // Remove messages from another conversations
-            // messages.RemoveAll(_message => _message.Destination() != _username && _message.Source() != _username);
+            return messages;
         }
     }
 }

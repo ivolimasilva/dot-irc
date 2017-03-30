@@ -190,6 +190,7 @@ namespace Client.Views
                 else
                 {
                     // Other user declined
+                    // TODO
                 }
             }
         }

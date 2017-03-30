@@ -47,6 +47,10 @@ namespace Client.Views
 
             #region Load messages from file
             filename = "messages-" + userSource.username + ".xml";
+
+            // Add empty message in the file
+            // TODO
+
             LoadMessages();
             #endregion
 
@@ -56,7 +60,6 @@ namespace Client.Views
             watcher.Filter = filename;
 
             // Add event handlers.
-            watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Changed += new FileSystemEventHandler(OnChanged);
 
             // Begin watching.
@@ -146,10 +149,9 @@ namespace Client.Views
             else
                 rtbMessages.Clear();
 
-            foreach (var message in messages)
-            {
-                // In case it's a "end message"
-                if (message.End())
+            // If the last message it an end
+            if (messages.Count > 0)
+                if (messages.Last().End())
                 {
                     if (MessageBox.Show(userDestination.name + " has closed the conversation.", "End of conversation", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
@@ -169,28 +171,34 @@ namespace Client.Views
                     }
                 }
 
-                if (rtbMessages.InvokeRequired)
+            // In case of the other messages
+            foreach (var message in messages)
+            {
+                if (!message.End() || message.Content() != null)
                 {
-                    rtbMessages.BeginInvoke((MethodInvoker)delegate ()
+                    if (rtbMessages.InvokeRequired)
+                    {
+                        rtbMessages.BeginInvoke((MethodInvoker)delegate ()
+                        {
+                            if (userSource.username == message.Source())
+                                rtbMessages.SelectionColor = System.Drawing.Color.Green;
+                            else
+                                rtbMessages.SelectionColor = System.Drawing.Color.Black;
+
+                            rtbMessages.AppendText(message.Source() + ": " + message.Content());
+                            rtbMessages.AppendText(Environment.NewLine);
+                        });
+                    }
+                    else
                     {
                         if (userSource.username == message.Source())
                             rtbMessages.SelectionColor = System.Drawing.Color.Green;
                         else
                             rtbMessages.SelectionColor = System.Drawing.Color.Black;
 
-                        rtbMessages.AppendText(message.Source() + " : " + message.Content());
+                        rtbMessages.AppendText(message.Source() + ": " + message.Content());
                         rtbMessages.AppendText(Environment.NewLine);
-                    });
-                }
-                else
-                {
-                    if (userSource.username == message.Source())
-                        rtbMessages.SelectionColor = System.Drawing.Color.Green;
-                    else
-                        rtbMessages.SelectionColor = System.Drawing.Color.Black;
-
-                    rtbMessages.AppendText(message.Source() + " : " + message.Content());
-                    rtbMessages.AppendText(Environment.NewLine);
+                    }
                 }
             }
         }
