@@ -3,6 +3,7 @@ using Client.Remotes;
 using Client.Views;
 using System.Windows.Forms;
 using Common.Utils;
+using System.Threading;
 
 namespace Client
 {
@@ -39,9 +40,11 @@ namespace Client
             }
             else
             {
-                Dashboard dashBoard = new Dashboard(user);
-                this.Hide();
-                dashBoard.ShowDialog();
+                // Open chatroom
+                new Thread(() =>
+                {
+                    Application.Run(new Dashboard(user));
+                }).Start();
                 this.Close();
             }
         }

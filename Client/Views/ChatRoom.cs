@@ -4,15 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
-using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using Client.Utils;
 
 namespace Client.Views
 {
-    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public partial class ChatRoom : Form
     {
         // Remote object for the other client
@@ -27,6 +24,8 @@ namespace Client.Views
         private FileSystemWatcher watcher = new FileSystemWatcher();
 
         private List<Common.Message> messages = new List<Common.Message>();
+
+        private string filename;
 
         public ChatRoom(User _userSource, User _userDestination)
         {
@@ -46,10 +45,15 @@ namespace Client.Views
             remoteClient = (IPrivateMessages)Activator.GetObject(typeof(IPrivateMessages), url);
             #endregion
 
+            #region Load messages from file
+            filename = "messages-" + userSource.username + ".xml";
+            LoadMessages();
+            #endregion
+
             #region File watcher
             watcher.Path = ".";
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            watcher.Filter = "messages-" + userSource.username + ".xml";
+            watcher.Filter = filename;
 
             // Add event handlers.
             watcher.Created += new FileSystemEventHandler(OnChanged);
@@ -63,16 +67,22 @@ namespace Client.Views
         // Define the event handlers.
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+            LoadMessages();
+        }
+
+        private void LoadMessages()
+        {
+            messages.Clear();
+
             XDocument file;
-            using (var mutex = new Mutex(false, "Message"))
+            using (var mutex = new Mutex(false, "Message" + userSource.username))
             {
                 mutex.WaitOne();
-                file = XDocument.Load(e.FullPath);
+                file = XDocument.Load(filename);
                 mutex.ReleaseMutex();
             }
 
-            messages.Clear();
-
+            // Load the list with all messages
             messages =
                 file.Root
                 .Elements("Message")
@@ -82,7 +92,10 @@ namespace Client.Views
                     (string)_message.Element("Content"),
                     (bool)_message.Element("End"))).ToList();
 
-            update();
+            // Remove messages from another conversations
+            messages.RemoveAll(_message => _message.Destination() != userSource.username && _message.Source() != userSource.username);
+
+            UpdateMessages();
         }
 
         private void btnSendMsg_Click(object sender, EventArgs e)
@@ -92,13 +105,10 @@ namespace Client.Views
                 Common.Message _message = new Common.Message(userSource.username, userDestination.username, txtboxChat.Text);
                 remoteClient.send(_message);
 
-                messages.Add(_message);
-                update();
-
                 // Save Messages to a file
                 try
                 {
-                    string filename = "./messages-" + _message.Destination() + ".xml";
+                    messages.Add(_message);
 
                     XElement file = new XElement("Messages",
                         from message in messages
@@ -109,7 +119,7 @@ namespace Client.Views
                         new XElement("Content", message.Content()),
                         new XElement("End", message.End())));
 
-                    using (var mutex = new Mutex(false, "Message"))
+                    using (var mutex = new Mutex(false, "Message" + userSource.username))
                     {
                         mutex.WaitOne();
                         file.Save(filename);
@@ -126,7 +136,7 @@ namespace Client.Views
             }
         }
 
-        private void update()
+        private void UpdateMessages()
         {
             if (rtbMessages.InvokeRequired)
                 rtbMessages.BeginInvoke((MethodInvoker)delegate ()
@@ -196,7 +206,7 @@ namespace Client.Views
         private void End()
         {
             // Clear messages file
-            File.Delete("./messages-" + userSource.username + ".xml");
+            // File.Delete("./messages-" + userSource.username + ".xml");
 
             // Clear watcher
             watcher.Dispose();

@@ -4,13 +4,14 @@ using Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using System.Windows.Forms;
-using System.IO;
+using System.Xml.Linq;
 
 namespace Client.Views
 {
@@ -28,7 +29,8 @@ namespace Client.Views
         // List of users without logged user
         private List<User> filteredUsers;
 
-        private static string filenameExt = ".xml";
+        private string filename;
+        private FileSystemWatcher watcher = new FileSystemWatcher();
 
         public Dashboard(User _user)
         {
@@ -40,8 +42,13 @@ namespace Client.Views
             user = _user;
             lblUserName.Text = "Logged as " + user.name;
 
-            // Clear messages file
-            File.Delete("./messages-" + user.username + filenameExt);
+            // Delete & Create messages file
+            filename = "messages-" + user.username + ".xml";
+            using (var mutex = new Mutex(false, "Message" + user.username))
+            {
+                XElement file = new XElement("Messages");
+                file.Save(filename);
+            }
 
             // Register own channel
             TcpChannel channel = (TcpChannel)Remoting.GetChannel(user.port, false);
@@ -55,6 +62,56 @@ namespace Client.Views
 
             userRepeater.onChange += new UserHandler(userListener);
             remoteAuth.onChange += new UserHandler(userRepeater.Repeater);
+
+            #region File watcher
+            watcher.Path = ".";
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            watcher.Filter = filename;
+
+            // Add event handlers.
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+
+            // Begin watching.
+            watcher.EnableRaisingEvents = true;
+            #endregion
+        }
+
+        // Define the event handlers.
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            List<Common.Message> messages = new List<Common.Message>();
+
+            XDocument file;
+            using (var mutex = new Mutex(false, "Message" + user.username))
+            {
+                mutex.WaitOne();
+                file = XDocument.Load(e.FullPath);
+
+                // Load the list with all messages
+                messages =
+                    file.Root
+                    .Elements("Message")
+                    .Select(_message => new Common.Message(
+                        (string)_message.Element("Source"),
+                        (string)_message.Element("Destination"),
+                        (string)_message.Element("Content"),
+                        (bool)_message.Element("End"))).ToList();
+
+                // Remove messages from another conversations
+                messages.RemoveAll(_message => _message.End());
+
+                XElement fileSave = new XElement("Messages",
+                            from message in messages
+                            select new XElement("Message",
+                            new XAttribute("ID", messages.IndexOf(message)),
+                            new XElement("Source", message.Source()),
+                            new XElement("Destination", message.Destination()),
+                            new XElement("Content", message.Content()),
+                            new XElement("End", message.End())));
+
+                fileSave.Save(filename);
+                mutex.ReleaseMutex();
+            }
         }
 
         private void userListener(List<User> _users)
@@ -65,8 +122,9 @@ namespace Client.Views
 
         private void closeDashBoard(object sender, FormClosedEventArgs e)
         {
+            watcher.Dispose();
             remoteAuth.logout(user.username);
-            this.Close();
+            Application.Exit();
         }
 
         private void updateUserList(List<User> users)
