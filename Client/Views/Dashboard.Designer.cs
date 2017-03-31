@@ -42,6 +42,7 @@
             this.listUsers.Name = "listUsers";
             this.listUsers.Size = new System.Drawing.Size(313, 184);
             this.listUsers.TabIndex = 3;
+            this.listUsers.SelectedIndexChanged += new System.EventHandler(this.listUsers_SelectedIndexChanged);
             // 
             // lblUserName
             // 
@@ -75,13 +76,14 @@
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.listUsers);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Dashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dashboard";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeDashBoard);
             this.ResumeLayout(false);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+
         }
 
         #endregion

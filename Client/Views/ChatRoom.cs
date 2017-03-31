@@ -174,7 +174,7 @@ namespace Client.Views
                 {
                     if (MessageBox.Show(userDestination.name + " has closed the conversation.", "End of conversation", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
-                        End();
+                        watcher.Dispose();
 
                         if (this.InvokeRequired)
                         {
@@ -221,28 +221,6 @@ namespace Client.Views
                         rtbMessages.AppendText(Environment.NewLine);
                     }
                 }
-                /*
-                else if (message.End() && message.Content() != null)
-                {
-                    // Start of conversation message
-
-                    if (rtbMessages.InvokeRequired)
-                    {
-                        rtbMessages.BeginInvoke((MethodInvoker)delegate ()
-                        {
-                            rtbMessages.SelectionColor = System.Drawing.Color.Red;
-                            rtbMessages.AppendText(message.Content());
-                            rtbMessages.AppendText(Environment.NewLine);
-                        });
-                    }
-                    else
-                    {
-                        rtbMessages.SelectionColor = System.Drawing.Color.Red;
-                        rtbMessages.AppendText(message.Content());
-                        rtbMessages.AppendText(Environment.NewLine);
-                    }
-                }
-                */
             }
         }
 
@@ -251,15 +229,6 @@ namespace Client.Views
             // Send end message
             remoteClient.send(new Common.Message(userSource.username, userDestination.username, true));
 
-            End();
-        }
-
-        private void End()
-        {
-            // Clear messages file
-            // File.Delete("./messages-" + userSource.username + ".xml");
-
-            // Clear watcher
             watcher.Dispose();
         }
     }
