@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Remoting;
+using System.Windows.Forms;
 
 namespace Server
 {
@@ -13,8 +14,12 @@ namespace Server
 
             RemotingConfiguration.Configure("Server.exe.config", false);             
             // Wait for exit
-            Console.WriteLine("Service started. Press enter to exit.");
-            Console.ReadKey();
+         /*   Console.WriteLine("Service started. Press enter to exit.");
+            Console.ReadKey();*/
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ServerHome());
         }
     }
 }

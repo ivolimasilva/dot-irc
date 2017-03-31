@@ -12,6 +12,15 @@ namespace Common
         public Utils.IP ip { get; set; }
         public int port { get; set; }
 
+        public User(string _username, string _name, string _password, int _port, bool _online)
+        {
+            username = _username;
+            name = _name;
+            password = _password;
+            port = _port;
+            online = _online;
+        }
+
         public User(string _username, string _name, string _password, int _port)
         {
             username = _username;

@@ -114,6 +114,8 @@ namespace Server
 
         private void broadcast(List<User> users)
         {
+            Files.Save(Files.filename, users);
+
             if (onChange != null)
             {
                 Delegate[] invkList = onChange.GetInvocationList();
