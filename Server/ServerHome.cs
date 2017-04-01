@@ -25,6 +25,9 @@ namespace Server
         {
             InitializeComponent();
 
+            users = Files.Load("users.xml");
+            //startListView();
+
             #region File watcher
             watcher.Path = ".";
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
@@ -36,10 +39,7 @@ namespace Server
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
-            #endregion
-
-            users = Files.Load("users.xml");
-            startListView();
+            #endregion            
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)
@@ -63,13 +63,14 @@ namespace Server
                     (bool)_user.Element("Online"))).ToList();
 
             startListView();
-            lblAccountNo.Text = "Total Accounts : " + users.Count;
-            lblOnlineAccounts.Text = "Accounts Online :" + users.FindAll(user => user.online).ToList().Count; 
+            lblAccountNo.Text = "Total Accounts: " + users.Count;
+            lblOnlineAccounts.Text = "Accounts Online:" + users.FindAll(user => user.online).ToList().Count;
+            lblConvoOpen.Text = "Conversations Open: ";
         }
 
         private void startListView()
         {
-            
+            listView.Items.Clear();        
             foreach (User user in users)
             {
                 ListViewItem item = new ListViewItem(user.username);
@@ -80,7 +81,14 @@ namespace Server
                 if (listView.InvokeRequired)
                     listView.BeginInvoke((MethodInvoker)delegate ()
                     {
-                        listView.Items.Add(item);
+                        bool exists = false;
+                        foreach (ListViewItem itemDouble in listView.Items)
+                        {
+                            if (itemDouble == item)
+                                exists = true;
+                        }
+                        if (!exists)
+                            listView.Items.Add(item);
                     });
             }
             /*listView.OwnerDraw = true;
@@ -125,6 +133,15 @@ namespace Server
             {
                 e.DrawText();
             }
+        }
+
+        private void ServerHome_Close(object sender, EventArgs e)
+        {
+            foreach(User user in users)
+            {
+                user.online = false;
+            }
+            Files.Save(Files.filename, users);
         }
     }
 }

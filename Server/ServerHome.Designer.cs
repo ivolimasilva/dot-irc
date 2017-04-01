@@ -33,6 +33,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblAccountNo = new System.Windows.Forms.Label();
             this.lblOnlineAccounts = new System.Windows.Forms.Label();
+            this.lblConvoOpen = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listView
@@ -55,7 +56,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "Status";
-            this.columnHeader2.Width = 103;
+            this.columnHeader2.Width = 88;
             // 
             // lblAccountNo
             // 
@@ -63,9 +64,9 @@
             this.lblAccountNo.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAccountNo.Location = new System.Drawing.Point(375, 13);
             this.lblAccountNo.Name = "lblAccountNo";
-            this.lblAccountNo.Size = new System.Drawing.Size(114, 18);
+            this.lblAccountNo.Size = new System.Drawing.Size(111, 18);
             this.lblAccountNo.TabIndex = 3;
-            this.lblAccountNo.Text = "Total Accounts : 0";
+            this.lblAccountNo.Text = "Total Accounts: 0";
             // 
             // lblOnlineAccounts
             // 
@@ -73,23 +74,34 @@
             this.lblOnlineAccounts.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOnlineAccounts.Location = new System.Drawing.Point(375, 31);
             this.lblOnlineAccounts.Name = "lblOnlineAccounts";
-            this.lblOnlineAccounts.Size = new System.Drawing.Size(126, 18);
+            this.lblOnlineAccounts.Size = new System.Drawing.Size(123, 18);
             this.lblOnlineAccounts.TabIndex = 4;
-            this.lblOnlineAccounts.Text = "Accounts Online : 0";
+            this.lblOnlineAccounts.Text = "Accounts Online: 0";
+            // 
+            // lblConvoOpen
+            // 
+            this.lblConvoOpen.AutoSize = true;
+            this.lblConvoOpen.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblConvoOpen.Location = new System.Drawing.Point(376, 53);
+            this.lblConvoOpen.Name = "lblConvoOpen";
+            this.lblConvoOpen.Size = new System.Drawing.Size(146, 18);
+            this.lblConvoOpen.TabIndex = 5;
+            this.lblConvoOpen.Text = "Conversations Open: 0";
             // 
             // ServerHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 370);
+            this.ClientSize = new System.Drawing.Size(530, 370);
+            this.Controls.Add(this.lblConvoOpen);
             this.Controls.Add(this.lblOnlineAccounts);
             this.Controls.Add(this.lblAccountNo);
             this.Controls.Add(this.listView);
             this.Name = "ServerHome";
-            this.Text = "ServerHome";
+            this.Text = "ServerHome";            
+            //this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerHome_Close);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -99,5 +111,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label lblAccountNo;
         private System.Windows.Forms.Label lblOnlineAccounts;
+        private System.Windows.Forms.Label lblConvoOpen;
     }
 }
