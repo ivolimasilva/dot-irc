@@ -93,7 +93,8 @@ namespace Server
                 {
                     Console.WriteLine("Login failed.\n");
                     return null;
-                }         
+                }
+            
             }
             else
             {

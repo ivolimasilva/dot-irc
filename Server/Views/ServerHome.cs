@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Utils;
 using Server.Utils;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,13 @@ namespace Server
         private FileSystemWatcher watcher = new FileSystemWatcher();
         private List<User> users = new List<User>();
 
+
         public ServerHome()
         {
             InitializeComponent();
 
-            users = Files.Load("users.xml");
-            //startListView();
+            users = Files.Load(Files.filename);
+            startListView();
 
             #region File watcher
             watcher.Path = ".";
@@ -65,7 +67,7 @@ namespace Server
             startListView();
             lblAccountNo.Text = "Total Accounts: " + users.Count;
             lblOnlineAccounts.Text = "Accounts Online:" + users.FindAll(user => user.online).ToList().Count;
-            lblConvoOpen.Text = "Conversations Open: ";
+            //lblConvoOpen.Text = "Conversations Open: " + Stat.getChatCount();
         }
 
         private void startListView()
@@ -81,14 +83,7 @@ namespace Server
                 if (listView.InvokeRequired)
                     listView.BeginInvoke((MethodInvoker)delegate ()
                     {
-                        bool exists = false;
-                        foreach (ListViewItem itemDouble in listView.Items)
-                        {
-                            if (itemDouble == item)
-                                exists = true;
-                        }
-                        if (!exists)
-                            listView.Items.Add(item);
+                        listView.Items.Add(item);
                     });
             }
             /*listView.OwnerDraw = true;
@@ -142,6 +137,12 @@ namespace Server
                 user.online = false;
             }
             Files.Save(Files.filename, users);
+        }
+
+        private void ServerHome_Load(object sender, EventArgs e)
+        {
+            users = Files.Load(Files.filename);
+            startListView();
         }
     }
 }

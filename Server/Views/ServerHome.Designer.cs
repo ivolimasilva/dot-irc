@@ -98,10 +98,11 @@
             this.Controls.Add(this.lblAccountNo);
             this.Controls.Add(this.listView);
             this.Name = "ServerHome";
-            this.Text = "ServerHome";            
-            //this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerHome_Close);
+            this.Text = "ServerHome";
+            //this.Load += new System.EventHandler(this.ServerHome_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

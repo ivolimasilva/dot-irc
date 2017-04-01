@@ -53,10 +53,10 @@
     <Compile Include="Messages.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerHome.cs">
+    <Compile Include="Views\ServerHome.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ServerHome.Designer.cs">
+    <Compile Include="Views\ServerHome.Designer.cs">
       <DependentUpon>ServerHome.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Files.cs" />
@@ -69,7 +69,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ServerHome.resx">
+    <EmbeddedResource Include="Views\ServerHome.resx">
       <DependentUpon>ServerHome.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
