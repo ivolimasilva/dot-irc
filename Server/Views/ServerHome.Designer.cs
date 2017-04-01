@@ -82,7 +82,7 @@
             // 
             this.lblConvoOpen.AutoSize = true;
             this.lblConvoOpen.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConvoOpen.Location = new System.Drawing.Point(376, 53);
+            this.lblConvoOpen.Location = new System.Drawing.Point(375, 49);
             this.lblConvoOpen.Name = "lblConvoOpen";
             this.lblConvoOpen.Size = new System.Drawing.Size(146, 18);
             this.lblConvoOpen.TabIndex = 5;
@@ -98,8 +98,8 @@
             this.Controls.Add(this.lblAccountNo);
             this.Controls.Add(this.listView);
             this.Name = "ServerHome";
-            this.Text = "ServerHome";
-            //this.Load += new System.EventHandler(this.ServerHome_Load);
+            this.Text = "ServerHome";            
+            this.Load += new System.EventHandler(this.ServerHome_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

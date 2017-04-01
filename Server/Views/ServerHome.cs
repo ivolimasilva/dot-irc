@@ -1,17 +1,13 @@
 ﻿using Common;
-using Common.Utils;
 using Server.Utils;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -22,12 +18,13 @@ namespace Server
         private FileSystemWatcher watcher = new FileSystemWatcher();
         private List<User> users = new List<User>();
 
-
         public ServerHome()
         {
-            InitializeComponent();
-
             users = Files.Load(Files.filename);
+
+            InitializeComponent();
+            //this.FormClosed += new FormClosedEventHandler(this.ServerHome_Close);
+
             startListView();
 
             #region File watcher
@@ -41,7 +38,8 @@ namespace Server
 
             // Begin watching.
             watcher.EnableRaisingEvents = true;
-            #endregion            
+            #endregion
+
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)
@@ -67,12 +65,11 @@ namespace Server
             startListView();
             lblAccountNo.Text = "Total Accounts: " + users.Count;
             lblOnlineAccounts.Text = "Accounts Online:" + users.FindAll(user => user.online).ToList().Count;
-            //lblConvoOpen.Text = "Conversations Open: " + Stat.getChatCount();
         }
 
-        private void startListView()
+        public void startListView()
         {
-            listView.Items.Clear();        
+            listView.Items.Clear();
             foreach (User user in users)
             {
                 ListViewItem item = new ListViewItem(user.username);
@@ -85,18 +82,22 @@ namespace Server
                     {
                         listView.Items.Add(item);
                     });
+                else
+                {
+                    listView.Items.Add(item);
+                }
             }
+
             /*listView.OwnerDraw = true;
             listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
             listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);*/
         }
 
-        
         private void list_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             using (var sf = new StringFormat())
             {
-                sf.Alignment = StringAlignment.Center;                
+                sf.Alignment = StringAlignment.Center;
 
                 using (var headerFont = new Font("Calibri", 11, FontStyle.Bold))
                 {
@@ -132,7 +133,7 @@ namespace Server
 
         private void ServerHome_Close(object sender, EventArgs e)
         {
-            foreach(User user in users)
+            foreach (User user in users)
             {
                 user.online = false;
             }
