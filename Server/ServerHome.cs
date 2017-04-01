@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,7 +39,6 @@ namespace Server
             #endregion
 
             users = Files.Load("users.xml");
-
             startListView();
         }
 
@@ -63,14 +63,16 @@ namespace Server
                     (bool)_user.Element("Online"))).ToList();
 
             startListView();
+            lblAccountNo.Text = "Total Accounts : " + users.Count;
+            lblOnlineAccounts.Text = "Accounts Online :" + users.FindAll(user => user.online).ToList().Count; 
         }
 
         private void startListView()
         {
+            
             foreach (User user in users)
             {
-                ListViewItem item = new ListViewItem();
-                item.SubItems.Add(user.username);
+                ListViewItem item = new ListViewItem(user.username);
                 if (user.online)
                     item.SubItems.Add("online");
                 else item.SubItems.Add("offline");
@@ -80,6 +82,48 @@ namespace Server
                     {
                         listView.Items.Add(item);
                     });
+            }
+            /*listView.OwnerDraw = true;
+            listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
+            listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);*/
+        }
+
+        
+        private void list_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            using (var sf = new StringFormat())
+            {
+                sf.Alignment = StringAlignment.Center;                
+
+                using (var headerFont = new Font("Calibri", 11, FontStyle.Bold))
+                {
+                    //e.Graphics.FillRectangle(Brushes.Gray, e.Bounds);
+                    e.Graphics.DrawString(e.Header.Text, headerFont, Brushes.Black, e.Bounds, sf);
+                }
+            }
+        }
+        private void list_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if ((e.State & ListViewItemStates.Selected) != 0)
+            {
+                // Draw the background and focus rectangle for a selected item.
+                e.Graphics.FillRectangle(Brushes.Maroon, e.Bounds);
+                e.DrawFocusRectangle();
+            }
+            else
+            {
+                // Draw the background for an unselected item.
+                using (LinearGradientBrush brush =
+                    new LinearGradientBrush(e.Bounds, Color.Orange,
+                    Color.Maroon, LinearGradientMode.Horizontal))
+                {
+                    e.Graphics.FillRectangle(brush, e.Bounds);
+                }
+            }
+
+            if (listView.View != View.Details)
+            {
+                e.DrawText();
             }
         }
     }
