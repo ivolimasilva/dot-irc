@@ -5,10 +5,10 @@ namespace Common
     [Serializable]
     public class Message
     {
-        private String source, destination, content;
+        private string source, destination, content;
         private bool end;
 
-        public Message(String _source, String _destination, String _content, bool _end)
+        public Message(string _source, string _destination, string _content, bool _end)
         {
             source = _source;
             destination = _destination;
@@ -16,7 +16,7 @@ namespace Common
             end = _end;
         }
 
-        public Message(String _source, String _destination, String _content)
+        public Message(string _source, string _destination, string _content)
         {
             source = _source;
             destination = _destination;
@@ -24,24 +24,24 @@ namespace Common
             end = false;
         }
 
-        public Message(String _source, String _destination, bool _end)
+        public Message(string _source, string _destination, bool _end)
         {
             source = _source;
             destination = _destination;
             end = true;
         }
 
-        public String Source()
+        public string Source()
         {
             return source;
         }
 
-        public String Destination()
+        public string Destination()
         {
             return destination;
         }
 
-        public String Content()
+        public string Content()
         {
             return content;
         }

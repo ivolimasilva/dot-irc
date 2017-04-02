@@ -38,17 +38,18 @@ namespace Client.Views
             // 
             // txtboxChat
             // 
-            this.txtboxChat.Location = new System.Drawing.Point(12, 382);
+            this.txtboxChat.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtboxChat.Location = new System.Drawing.Point(12, 372);
             this.txtboxChat.Name = "txtboxChat";
-            this.txtboxChat.Size = new System.Drawing.Size(414, 20);
+            this.txtboxChat.Size = new System.Drawing.Size(414, 27);
             this.txtboxChat.TabIndex = 0;
             // 
             // btnSendMsg
             // 
             this.btnSendMsg.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSendMsg.Location = new System.Drawing.Point(432, 382);
+            this.btnSendMsg.Location = new System.Drawing.Point(432, 370);
             this.btnSendMsg.Name = "btnSendMsg";
-            this.btnSendMsg.Size = new System.Drawing.Size(49, 23);
+            this.btnSendMsg.Size = new System.Drawing.Size(49, 30);
             this.btnSendMsg.TabIndex = 1;
             this.btnSendMsg.Text = "Send";
             this.btnSendMsg.UseVisualStyleBackColor = true;
@@ -56,11 +57,11 @@ namespace Client.Views
             // 
             // rtbMessages
             // 
-            this.rtbMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtbMessages.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbMessages.Location = new System.Drawing.Point(12, 12);
             this.rtbMessages.Name = "rtbMessages";
             this.rtbMessages.ReadOnly = true;
-            this.rtbMessages.Size = new System.Drawing.Size(469, 364);
+            this.rtbMessages.Size = new System.Drawing.Size(469, 352);
             this.rtbMessages.TabIndex = 2;
             this.rtbMessages.Text = "";
             // 
@@ -73,13 +74,14 @@ namespace Client.Views
             this.Controls.Add(this.rtbMessages);
             this.Controls.Add(this.btnSendMsg);
             this.Controls.Add(this.txtboxChat);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ChatRoom";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChatRoom";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeChatroom);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

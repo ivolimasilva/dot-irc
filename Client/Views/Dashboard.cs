@@ -26,6 +26,11 @@ namespace Client.Views
         // Remote object for the Authentication module
         private IAuth remoteAuth;
 
+        // Remote object for the Messages module
+        private IMessages remoteMessages;
+
+        private List<Common.Message> globalMessages = new List<Common.Message>();
+
         // List of users without logged user
         private List<User> filteredUsers;
 
@@ -41,9 +46,18 @@ namespace Client.Views
             remoteAuth = (IAuth)RemoteNew.New(typeof(IAuth));
             UserHandlerEventRepeater userRepeater = new UserHandlerEventRepeater();
 
+            remoteMessages = (IMessages)RemoteNew.New(typeof(IMessages));
+            MessageHandlerEventRepeater messageRepeater = new MessageHandlerEventRepeater();
+
+            messageRepeater.onChange += new MessageHandler(messageListener);
+            remoteMessages.onChange += new MessageHandler(messageRepeater.Repeater);
+
             // Set current user
             user = _user;
             lblUserName.Text = "Logged as " + user.name;
+
+            globalMessages = remoteMessages.getMessages();
+            UpdateMessages();
 
             // Delete & Create messages file
             filename = "messages-" + user.username + ".xml";
@@ -77,6 +91,51 @@ namespace Client.Views
             // Begin watching.
             watcher.EnableRaisingEvents = true;
             #endregion
+        }
+
+        private void messageListener(List<Common.Message> _messages)
+        {
+            globalMessages = _messages;
+            UpdateMessages();
+        }
+
+        private void UpdateMessages()
+        {
+            if (rtbChat.InvokeRequired)
+                rtbChat.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    rtbChat.Clear();
+                });
+            else
+                rtbChat.Clear();
+
+            // In case of the other messages
+            foreach (Common.Message message in globalMessages)
+            {
+                if (rtbChat.InvokeRequired)
+                {
+                    rtbChat.BeginInvoke((MethodInvoker)delegate ()
+                    {
+                        if (user.username == message.Source())
+                            rtbChat.SelectionColor = Color.Green;
+                        else
+                            rtbChat.SelectionColor = Color.Black;
+
+                        rtbChat.AppendText(message.Source() + ": " + message.Content());
+                        rtbChat.AppendText(Environment.NewLine);
+                    });
+                }
+                else
+                {
+                    if (user.username == message.Source())
+                        rtbChat.SelectionColor = Color.Green;
+                    else
+                        rtbChat.SelectionColor = Color.Black;
+
+                    rtbChat.AppendText(message.Source() + ": " + message.Content());
+                    rtbChat.AppendText(Environment.NewLine);
+                }
+            }
         }
 
         // Define the event handlers.
@@ -225,6 +284,18 @@ namespace Client.Views
         private void listUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateBtnStart();
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            if (txtChat.Text.Trim().Length > 0)
+            {
+                Common.Message _message = new Common.Message(user.username, "ALL", txtChat.Text);
+                remoteMessages.send(_message);
+
+                // Clear input box
+                txtChat.Clear();
+            }
         }
     }
 }

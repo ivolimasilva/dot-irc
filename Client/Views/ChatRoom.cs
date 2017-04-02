@@ -114,7 +114,7 @@ namespace Client.Views
                     (bool)_message.Element("End"))).ToList();
 
             // Remove messages from another conversations
-            messages.RemoveAll(_message => _message.Destination() != userSource.username && _message.Source() != userSource.username);
+            messages.RemoveAll(_message => !(_message.Source() == userDestination.username || _message.Destination() == userDestination.username));
 
             if (!_firstTime)
                 UpdateMessages();
