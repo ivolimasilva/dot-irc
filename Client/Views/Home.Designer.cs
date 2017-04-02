@@ -249,8 +249,7 @@
             this.tabLogin.ResumeLayout(false);
             this.tabLogin.PerformLayout();
             this.ResumeLayout(false);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+
         }
 
         #endregion
