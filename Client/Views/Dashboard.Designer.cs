@@ -1,4 +1,6 @@
-﻿namespace Client.Views
+﻿using System.Windows.Forms;
+
+namespace Client.Views
 {
     partial class Dashboard
     {
