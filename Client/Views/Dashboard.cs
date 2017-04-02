@@ -149,7 +149,9 @@ namespace Client.Views
         {
             watcher.Dispose();
             remoteAuth.logout(user.username);
-            Application.Exit();
+
+            // This is a forced exit - but oh well, who cares?
+            Environment.Exit(Environment.ExitCode);
         }
 
         private void updateUserList()
