@@ -50,12 +50,12 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Username";
-            this.columnHeader1.Width = 234;
+            this.columnHeader1.Width = 250;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Status";
-            this.columnHeader2.Width = 88;
+            this.columnHeader2.Width = 100;
             // 
             // lblAccountNo
             // 
@@ -81,10 +81,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(530, 370);
+            this.ClientSize = new System.Drawing.Size(530, 350);
             this.Controls.Add(this.lblOnlineAccounts);
             this.Controls.Add(this.lblAccountNo);
             this.Controls.Add(this.listView);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ServerHome";
             this.Text = "ServerHome";
             this.Load += new System.EventHandler(this.ServerHome_Load);

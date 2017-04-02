@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Remotes\Messages.cs" />
     <Compile Include="Remotes\RemoteNew.cs" />
     <Compile Include="Services\PrivateMessages.cs" />
     <Compile Include="Services\Requests.cs" />

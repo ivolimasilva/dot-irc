@@ -63,23 +63,36 @@ namespace Server
 
             startListView();
             lblAccountNo.Text = "Total Accounts: " + users.Count;
-            lblOnlineAccounts.Text = "Accounts Online:" + users.FindAll(user => user.online).ToList().Count;
+
+            if (lblOnlineAccounts.InvokeRequired)
+                lblOnlineAccounts.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    lblOnlineAccounts.Text = "Accounts Online: " + users.FindAll(user => user.online).ToList().Count;
+                });
+            else
+                lblOnlineAccounts.Text = "Accounts Online: " + users.FindAll(user => user.online).ToList().Count;
         }
 
         public void startListView()
         {
-            listView.Items.Clear();
-            
+            if (listView.InvokeRequired)
+                listView.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    listView.Items.Clear();
+                });
+            else
+                listView.Items.Clear();
+
             foreach (User user in users)
             {
                 ListViewItem item = new ListViewItem(user.username);
                 if (user.online)
                 {
-                    item.SubItems.Add("online");
+                    item.SubItems.Add("Online");
                 }
                 else
                 {
-                    item.SubItems.Add("offline");
+                    item.SubItems.Add("Offline");
                 }
 
                 if (listView.InvokeRequired)
@@ -121,7 +134,7 @@ namespace Server
                 user.online = false;
             }
             Files.Save(Files.filename, users);
-            watcher.Dispose();      
+            watcher.Dispose();
         }
 
         private void ServerHome_Load(object sender, EventArgs e)

@@ -7,6 +7,7 @@ namespace Common
     public interface IMessages
     {
         event MessageHandler onChange;
+        List<Message> getMessages();
         void send(Message _message);
     }
 }
