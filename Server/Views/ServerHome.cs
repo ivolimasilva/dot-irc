@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,7 +22,7 @@ namespace Server
             users = Files.Load(Files.filename);
 
             InitializeComponent();
-            //this.FormClosed += new FormClosedEventHandler(this.ServerHome_Close);
+            this.FormClosed += new FormClosedEventHandler(this.ServerHome_Close);
 
             startListView();
 
@@ -70,12 +69,18 @@ namespace Server
         public void startListView()
         {
             listView.Items.Clear();
+            
             foreach (User user in users)
             {
                 ListViewItem item = new ListViewItem(user.username);
                 if (user.online)
+                {
                     item.SubItems.Add("online");
-                else item.SubItems.Add("offline");
+                }
+                else
+                {
+                    item.SubItems.Add("offline");
+                }
 
                 if (listView.InvokeRequired)
                     listView.BeginInvoke((MethodInvoker)delegate ()
@@ -88,9 +93,10 @@ namespace Server
                 }
             }
 
-            /*listView.OwnerDraw = true;
-            listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
-            listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);*/
+           // listView.OwnerDraw = true;
+           // listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
+           // listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);
+           // listView.DrawSubItem += new DrawListViewSubItemEventHandler(listView_DrawSubItem);
         }
 
         private void list_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
@@ -106,30 +112,6 @@ namespace Server
                 }
             }
         }
-        private void list_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            if ((e.State & ListViewItemStates.Selected) != 0)
-            {
-                // Draw the background and focus rectangle for a selected item.
-                e.Graphics.FillRectangle(Brushes.Maroon, e.Bounds);
-                e.DrawFocusRectangle();
-            }
-            else
-            {
-                // Draw the background for an unselected item.
-                using (LinearGradientBrush brush =
-                    new LinearGradientBrush(e.Bounds, Color.Orange,
-                    Color.Maroon, LinearGradientMode.Horizontal))
-                {
-                    e.Graphics.FillRectangle(brush, e.Bounds);
-                }
-            }
-
-            if (listView.View != View.Details)
-            {
-                e.DrawText();
-            }
-        }
 
         private void ServerHome_Close(object sender, EventArgs e)
         {
@@ -138,6 +120,7 @@ namespace Server
                 user.online = false;
             }
             Files.Save(Files.filename, users);
+            watcher.Dispose();      
         }
 
         private void ServerHome_Load(object sender, EventArgs e)
