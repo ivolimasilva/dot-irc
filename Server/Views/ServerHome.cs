@@ -92,11 +92,12 @@ namespace Server
                     listView.Items.Add(item);
                 }
             }
+            lblAccountNo.Text = "Total Accounts: " + users.Count;
 
-           // listView.OwnerDraw = true;
-           // listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
-           // listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);
-           // listView.DrawSubItem += new DrawListViewSubItemEventHandler(listView_DrawSubItem);
+            // listView.OwnerDraw = true;
+            // listView.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(list_DrawColumnHeader);
+            // listView.DrawItem += new DrawListViewItemEventHandler(list_DrawItem);
+            // listView.DrawSubItem += new DrawListViewSubItemEventHandler(listView_DrawSubItem);
         }
 
         private void list_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)

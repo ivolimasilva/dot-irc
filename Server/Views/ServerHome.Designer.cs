@@ -33,7 +33,6 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblAccountNo = new System.Windows.Forms.Label();
             this.lblOnlineAccounts = new System.Windows.Forms.Label();
-            this.lblConvoOpen = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listView
@@ -78,27 +77,16 @@
             this.lblOnlineAccounts.TabIndex = 4;
             this.lblOnlineAccounts.Text = "Accounts Online: 0";
             // 
-            // lblConvoOpen
-            // 
-            this.lblConvoOpen.AutoSize = true;
-            this.lblConvoOpen.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConvoOpen.Location = new System.Drawing.Point(375, 49);
-            this.lblConvoOpen.Name = "lblConvoOpen";
-            this.lblConvoOpen.Size = new System.Drawing.Size(146, 18);
-            this.lblConvoOpen.TabIndex = 5;
-            this.lblConvoOpen.Text = "Conversations Open: 0";
-            // 
             // ServerHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 370);
-            this.Controls.Add(this.lblConvoOpen);
             this.Controls.Add(this.lblOnlineAccounts);
             this.Controls.Add(this.lblAccountNo);
             this.Controls.Add(this.listView);
             this.Name = "ServerHome";
-            this.Text = "ServerHome";            
+            this.Text = "ServerHome";
             this.Load += new System.EventHandler(this.ServerHome_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -112,6 +100,5 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label lblAccountNo;
         private System.Windows.Forms.Label lblOnlineAccounts;
-        private System.Windows.Forms.Label lblConvoOpen;
     }
 }
