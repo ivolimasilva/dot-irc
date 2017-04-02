@@ -71,7 +71,6 @@ namespace Client.Views
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
             watcher.Filter = filename;
 
-            // TODO: Watcher to block who's already in chat so it doesn't allow repeated conversation
             // Add event handlers.
             watcher.Changed += new FileSystemEventHandler(OnChanged);
 
@@ -122,13 +121,7 @@ namespace Client.Views
                 }
             }
 
-            if (btnStartChat.InvokeRequired)
-                btnStartChat.BeginInvoke((MethodInvoker)delegate ()
-                {
-                    btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
-                });
-            else
-                btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
+            UpdateBtnStart();
         }
 
         private void userListener(List<User> _users)
@@ -138,13 +131,18 @@ namespace Client.Views
 
             listUsers.DataSource = filteredUsers;
 
+            UpdateBtnStart();
+        }
+
+        private void UpdateBtnStart()
+        {
             if (btnStartChat.InvokeRequired)
                 btnStartChat.BeginInvoke((MethodInvoker)delegate ()
                 {
-                    btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
+                    btnStartChat.Enabled = !conversations.Contains(filteredUsers[listUsers.SelectedIndex].username) && filteredUsers[listUsers.SelectedIndex].online;
                 });
             else
-                btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
+                btnStartChat.Enabled = !conversations.Contains(filteredUsers[listUsers.SelectedIndex].username) && filteredUsers[listUsers.SelectedIndex].online;
         }
 
         private void closeDashBoard(object sender, FormClosedEventArgs e)
@@ -224,13 +222,7 @@ namespace Client.Views
 
         private void listUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (btnStartChat.InvokeRequired)
-                btnStartChat.BeginInvoke((MethodInvoker)delegate ()
-                {
-                    btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
-                });
-            else
-                btnStartChat.Enabled = !conversations.Contains(((User)listUsers.SelectedItem).username) && ((User)listUsers.SelectedItem).online;
+            UpdateBtnStart();
         }
     }
 }
