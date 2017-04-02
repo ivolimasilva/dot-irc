@@ -82,10 +82,19 @@ namespace Server
             if (users.Exists(user => user.Equals(test_user) && !user.online))
             {
                 User _user = users.Find(user => user.Equals(test_user));
-                _user.online = true;
-                _user.ip = _ip;
-                broadcast(users);
-                return _user;
+                if (_user.password.Equals(test_user.password))
+                {
+                    _user.online = true;
+                    _user.ip = _ip;
+                    broadcast(users);
+                    return _user;
+                }
+                else
+                {
+                    Console.WriteLine("Login failed.\n");
+                    return null;
+                }
+            
             }
             else
             {
@@ -114,6 +123,8 @@ namespace Server
 
         private void broadcast(List<User> users)
         {
+            Files.Save(Files.filename, users);
+
             if (onChange != null)
             {
                 Delegate[] invkList = onChange.GetInvocationList();

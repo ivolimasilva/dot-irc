@@ -42,12 +42,13 @@
             this.listUsers.Name = "listUsers";
             this.listUsers.Size = new System.Drawing.Size(313, 184);
             this.listUsers.TabIndex = 3;
+            this.listUsers.SelectedIndexChanged += new System.EventHandler(this.listUsers_SelectedIndexChanged);
             // 
             // lblUserName
             // 
             this.lblUserName.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblUserName.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserName.Location = new System.Drawing.Point(12, 9);
+            this.lblUserName.Location = new System.Drawing.Point(12, 12);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.lblUserName.Size = new System.Drawing.Size(313, 18);
@@ -58,9 +59,9 @@
             // btnStartChat
             // 
             this.btnStartChat.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStartChat.Location = new System.Drawing.Point(50, 223);
+            this.btnStartChat.Location = new System.Drawing.Point(12, 223);
             this.btnStartChat.Name = "btnStartChat";
-            this.btnStartChat.Size = new System.Drawing.Size(239, 23);
+            this.btnStartChat.Size = new System.Drawing.Size(313, 30);
             this.btnStartChat.TabIndex = 5;
             this.btnStartChat.Text = "Start Chat";
             this.btnStartChat.UseVisualStyleBackColor = true;
@@ -70,11 +71,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(337, 255);
+            this.ClientSize = new System.Drawing.Size(337, 261);
             this.Controls.Add(this.btnStartChat);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.listUsers);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Dashboard";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dashboard";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closeDashBoard);
             this.ResumeLayout(false);
